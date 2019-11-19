@@ -16,6 +16,12 @@ router.route('/')
 
 router.route('/login')
     .get(index.renderLogin)
+    .post(index.handleLogin)
+    .put()
+    .delete()
+
+router.route('/logout')
+    .get(index.handleLogout)
     .post()
     .put()
     .delete()

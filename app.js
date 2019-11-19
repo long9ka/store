@@ -32,15 +32,22 @@ connectDB = async () => {
 connectDB();
 
 // express body parser
-app.use(flash());
 app.use(express.urlencoded({ extended: true }));
 app.use(require('express-ejs-layouts'));
 
 app.use(session({
     secret: config.SECRET,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000*3600*24*7
+    }
 }))
+
+// init flash
+app.use(flash());
+app.use(require('./middleware/flash'));
 
 // use passport
 require('./middleware/passport')(passport);
@@ -48,6 +55,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/terms', require('./routes/terms'));
+app.use('/profile', require('./routes/profile'));
 app.use('/', require('./routes/index'));
 
 app.listen(config.PORT, console.log(`Server started on port ${config.PORT}`));

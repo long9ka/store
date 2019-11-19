@@ -16,6 +16,31 @@ module.exports = (passport) => {
     });
 
     // passport login
+    passport.use('login', new LocalStrategy(
+        {
+            usernameField: 'username',
+            passwordField: 'password',
+            passReqToCallback: true
+        },
+        (req, username, password, done) => {
+            User.findOne({ username })
+                .then(user => {
+                    if (!user) {
+                        return done(null, false, { message: 'Username is not registered' });
+                    }
+                    bcrypt.compare(password, user.password, (err, isMatch) => {
+                        if (err) {
+                            return done(null, false);
+                        }
+                        if (isMatch) {
+                            done(null, user);
+                        } else {
+                            done(null, false, { message: 'Password incorrect' });
+                        }
+                    })
+                })
+        }
+    ))
     // passport register
     passport.use('register', new LocalStrategy(
         {
@@ -28,12 +53,12 @@ module.exports = (passport) => {
             User.findOne({ username })
                 .then(user => {
                     if (user) {
-                        return done(null, false, { error_message: 'Username already exists' });
+                        return done(null, false, { message: 'Username already exists' });
                     }
                     Profile.findOne({ email })
                         .then(profile => {
                             if (profile) {
-                                return done(null, false, { error_message: 'Email already exists' });
+                                return done(null, false, { message: 'Email already exists' });
                             }
                             // new Profile
                             const newProfile = new Profile({
