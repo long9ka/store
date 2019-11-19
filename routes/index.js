@@ -1,12 +1,15 @@
 const router = require('express').Router();
 
+// middleware
+const checkAuth = require('../middleware/auth');
+
 // controller
 const index = require('../controllers/index');
 
 const passport = require('passport');
 
 router.route('/')
-    .get((req, res) => res.redirect('/login'))
+    .get(checkAuth, index.renderPage)
     .post()
     .put()
     .delete()

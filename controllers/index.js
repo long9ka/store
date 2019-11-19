@@ -1,6 +1,9 @@
 const passport = require('passport');
 
 module.exports = {
+    renderPage: (req, res) => {
+        res.send('hello world');
+    },
     renderLogin: (req, res) => {
         res.render('login');
     },
