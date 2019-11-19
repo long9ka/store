@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+
     <title>
         <% if (locals.title) { %>
-            <%= title %>
+        <%= title %>
         <% } else { %>
-            Store
+        Store
         <% } %>
     </title>
     <!--Import Bootswatch paper-->
@@ -18,7 +18,7 @@
 
 <body>
     <!--Navbar-->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -46,20 +46,25 @@
                                 <li class="divider"></li>
                                 <li><a href="#">Separated link</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">One more separated link</a></li>
+                                <li><a href="/terms">Terms of service</a></li>
                             </ul>
                         </li>
                     </ul>
+                    <% if (locals.user) { %>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Link</a></li>
+                        <li><a href="/profile"><%= locals.user %></a></li>
+                        <li><a href="/logout">Logout</a></li>
                     </ul>
+                    <% } %>
                 </div>
             </div>
         </div>
 
     </nav>
     <!--Body-->
-    <div class="container">
+    <div class="container page-header">
+        <br>
+        <br>
         <%- body %>
     </div>
     <!--Import bootstrap js-->

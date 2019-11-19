@@ -7,13 +7,15 @@
                 <div class="form-group">
                     <label for="inputUsername" class="col-lg-4 control-label">Username</label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" id="inputUsername" placeholder="Username" name="username">
+                        <input type="text" class="form-control" id="inputUsername" placeholder="Username"
+                            name="username">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword" class="col-lg-4 control-label">Password</label>
                     <div class="col-lg-8">
-                        <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Password"
+                            name="password">
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox"> Remember me
@@ -29,5 +31,14 @@
             </fieldset>
         </form>
     </div>
-    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+        <% if (error != '') { %>
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>
+                    <%= error %>
+                </strong>
+            </div>
+        <% } %>
+    </div>
 </div>
