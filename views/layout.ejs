@@ -52,7 +52,11 @@
                     </ul>
                     <% if (locals.user) { %>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/profile"><%= locals.user %></a></li>
+                        <li>
+                            <a href="/profile">
+                                <strong><%= locals.user.username %></strong>
+                            </a>
+                        </li>
                         <li><a href="/logout">Logout</a></li>
                     </ul>
                     <% } %>

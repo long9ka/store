@@ -2,7 +2,7 @@ const passport = require('passport');
 
 module.exports = {
     renderPage: (req, res) => {
-        res.render('page', { user: req.user.username });
+        res.render('page', { user: req.user });
     },
     renderLogin: (req, res) => {
         res.render('login', { title: 'Login' });

@@ -8,7 +8,7 @@ const profile = require('../controllers/profile');
 
 router.route('/')
     .get(checkAuth, profile.renderProfile)
-    .post()
+    .post(checkAuth, profile.updateProfile)
     .put()
     .delete()
 
