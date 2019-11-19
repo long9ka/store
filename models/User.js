@@ -4,6 +4,7 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         lowercase: true,
+        trim: true,
         required: true
     },
     password: {
@@ -13,6 +14,12 @@ const UserSchema = new mongoose.Schema({
     profileId: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'profile'
+    },
+    roles: {
+        type: String,
+        lowercase: true,
+        enum: ['guess', 'staff', 'manager', 'admin'],
+        default: 'guess'
     }
 })
 
