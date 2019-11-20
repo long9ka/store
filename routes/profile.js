@@ -2,14 +2,14 @@ const router = require('express').Router();
 
 // middleware
 const checkAuth = require('../middleware/auth');
+const validInput = require('../middleware/valid');
+const verify = require('../middleware/verify');
 // controller
 const profile = require('../controllers/profile');
-// valid input
-const validInput = require('../middleware/valid');
 
 router.route('/')
-    .get(checkAuth, profile.renderProfile)
-    .post(checkAuth, validInput.validUpdateProfile, profile.updateProfile)
+    .get(checkAuth, verify, profile.renderProfile)
+    .post(checkAuth, verify, validInput.validUpdateProfile, profile.updateProfile)
     .put()
     .delete()
 

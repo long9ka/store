@@ -77,6 +77,7 @@ module.exports = (passport) => {
                                 gender
                             })
                             newProfile.save()
+                                .then()
                                 .catch(error => console.error(error.message))
 
                             // new guess User 

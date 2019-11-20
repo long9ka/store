@@ -1,5 +1,6 @@
 const router = require('express').Router();
 
+// controllers
 const terms = require('../controllers/terms');
 
 router.route('/')

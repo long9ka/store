@@ -1,14 +1,15 @@
 const router = require('express').Router();
 
-// middleware
+// middlewares
 const checkAuth = require('../middleware/auth');
-// controller
-const index = require('../controllers/index');
-// valid input
 const validInput = require('../middleware/valid');
+const verify = require('../middleware/verify');
+// controllers
+const index = require('../controllers/index');
+
 
 router.route('/')
-    .get(checkAuth, index.renderPage)
+    .get(checkAuth, verify, index.renderPage)
     .post()
     .put()
     .delete()
@@ -28,6 +29,18 @@ router.route('/logout')
 router.route('/register')
     .get(index.renderRegister)
     .post(validInput.validRegister, index.handleRegister)
+    .put()
+    .delete()
+
+router.route('/verify')
+    .get(checkAuth, index.renderVerify)
+    .post()
+    .put()
+    .delete()
+
+router.route('/verify/otp')
+    .get()
+    .post(checkAuth, index.handleSendOptCode)
     .put()
     .delete()
 
