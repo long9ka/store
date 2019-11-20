@@ -1,5 +1,5 @@
 module.exports = {
     getTerms: (req, res) => {
-        res.render('terms');
+        res.render('terms', { user: req.user });
     }
 }
