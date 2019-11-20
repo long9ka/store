@@ -34,7 +34,7 @@ router.route('/register')
 
 router.route('/verify')
     .get(checkAuth, index.renderVerify)
-    .post()
+    .post(checkAuth, index.handleConfirmOtpCode)
     .put()
     .delete()
 

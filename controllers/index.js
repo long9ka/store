@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const config = require('../config');
 
 // models
+const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Otp = require('../models/Otp');
 
@@ -40,17 +41,30 @@ module.exports = {
         failureRedirect: '/register',
         failureFlash: true
     }),
+    handleConfirmOtpCode: (req, res) => {
+        Otp.findOne({ userId: req.user.id, token: req.body.otp })
+            .then(otp => {
+                if (otp) {
+                    User.findByIdAndUpdate(req.user.id, { isVerified: true })
+                        .then(result => {
+                            res.redirect('/');
+                        })
+                        .catch(error => console.error(error.message));
+                } else {
+                    res.redirect('/verify')
+                }
+            })
+            .catch(error => console.error(error.message));
+    },
     handleSendOptCode: (req, res) => {
-        console.log('handleSendOptCode');
-
+        // function random otp code [low, high]
         const randomCode = (low, high) => {
-            return Math.floor(Math.random()*(high - low + 1) + low);
+            return Math.floor(Math.random() * (high - low + 1) + low);
         }
 
         Profile.findById(req.user.profileId)
             .then(profile => {
                 if (profile) {
-                    console.log(profile.email);
                     // new otp code
                     const otp = new Otp({
                         userId: req.user.id,
@@ -70,11 +84,11 @@ module.exports = {
                             pass: config.EMAIL_PASS
                         }
                     })
-                    
+
                     const mailOptions = {
                         from: config.EMAIL_USER,
                         to: profile.email,
-                        subject: 'Verify Opt Code',
+                        subject: 'Welcome to Store Manager',
                         text: otp.token.toString()
                     }
 
