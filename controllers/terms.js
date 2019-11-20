@@ -1,5 +1,8 @@
 module.exports = {
     getTerms: (req, res) => {
-        res.render('terms', { user: req.user });
+        res.render('terms', { 
+            title: 'Terms of service',
+            user: req.user
+        });
     }
 }

@@ -8,6 +8,7 @@ module.exports = {
             .then(profile => {
                 if (profile) {
                     return res.render('profile', {
+                        title: 'Profile',
                         user: req.user,
                         profile
                     })
