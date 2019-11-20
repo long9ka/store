@@ -70,11 +70,12 @@ module.exports = (passport) => {
                             newProfile.save()
                                 .catch(error => console.error(error.message))
 
-                            // new User
+                            // new guess User 
                             let newUser = new User({
                                 username,
                                 password,
-                                profileId: newProfile.id
+                                profileId: newProfile.id,
+                                roles: ['guess']
                             })
                             // bcrypt
                             bcrypt.genSalt(10, (err, salt) => {

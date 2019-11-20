@@ -17,7 +17,7 @@ module.exports = {
     updateProfile: (req, res) => {
         Profile.findByIdAndUpdate(req.user.profileId, { $set: req.body })
             .then(result => {
-                req.flash('message', 'Update Profile successful');
+                req.flash('success', 'Update Profile successful');
                 res.redirect('/profile');
             })
             .catch(error => console.error(error.message));

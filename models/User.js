@@ -15,12 +15,13 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'profile'
     },
-    roles: {
-        type: String,
-        lowercase: true,
-        enum: ['guess', 'staff', 'manager', 'admin'],
-        default: 'guess'
-    }
+    roles: [
+        {
+            type: String,
+            lowercase: true,
+            enum: ['guess', 'staff', 'manager', 'admin']
+        }
+    ]
 })
 
 module.exports = mongoose.model('user', UserSchema);

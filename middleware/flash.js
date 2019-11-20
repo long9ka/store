@@ -1,5 +1,5 @@
 module.exports = (req, res, next) => {
-    res.locals.msg = req.flash('message');
+    res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 }
