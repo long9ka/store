@@ -4,6 +4,9 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 
+// validating input
+const { validationResult } = require('express-validator');
+
 module.exports = (passport) => {
     passport.serializeUser((user, done) => {
         done(null, user.id);
@@ -49,6 +52,12 @@ module.exports = (passport) => {
             passReqToCallback: true
         },
         (req, username, password, done) => {
+            // input valid
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return done(null, false, { message: errors.array()[0].msg });
+            }
+
             const { email, fullName, birthday, gender } = req.body;
             User.findOne({ username })
                 .then(user => {

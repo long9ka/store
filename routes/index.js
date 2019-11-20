@@ -2,11 +2,10 @@ const router = require('express').Router();
 
 // middleware
 const checkAuth = require('../middleware/auth');
-
 // controller
 const index = require('../controllers/index');
-
-const passport = require('passport');
+// valid input
+const validInput = require('../middleware/valid');
 
 router.route('/')
     .get(checkAuth, index.renderPage)
@@ -28,7 +27,7 @@ router.route('/logout')
 
 router.route('/register')
     .get(index.renderRegister)
-    .post(index.handleRegister)
+    .post(validInput.validRegister, index.handleRegister)
     .put()
     .delete()
 
