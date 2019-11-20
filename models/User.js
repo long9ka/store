@@ -11,6 +11,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     profileId: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'profile'
