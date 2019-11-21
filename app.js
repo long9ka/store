@@ -1,7 +1,7 @@
 // use .env
 require('dotenv').config();
 
-const config = require('./config');
+const config = require('./config/config');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -51,7 +51,7 @@ app.use(flash());
 app.use(require('./middleware/flash'));
 
 // use passport
-require('./middleware/passport')(passport);
+require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 

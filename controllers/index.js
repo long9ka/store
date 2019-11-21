@@ -1,6 +1,6 @@
 const passport = require('passport');
-const nodemailer = require('nodemailer');
-const config = require('../config');
+const transporter = require('../config/transporter');
+const config = require('../config/config');
 
 // models
 const User = require('../models/User');
@@ -51,6 +51,7 @@ module.exports = {
                         })
                         .catch(error => console.error(error.message));
                 } else {
+                    req.flash('error', 'Otp incorrect');
                     res.redirect('/verify')
                 }
             })
@@ -75,16 +76,6 @@ module.exports = {
                         .catch(error => console.error(error.message));
 
                     // send email
-                    const transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        secure: false,
-                        requireTLS: true,
-                        auth: {
-                            user: config.EMAIL_USER,
-                            pass: config.EMAIL_PASS
-                        }
-                    })
-
                     const mailOptions = {
                         from: config.EMAIL_USER,
                         to: profile.email,
