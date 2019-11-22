@@ -42,7 +42,7 @@ module.exports = {
         failureFlash: true
     }),
     handleConfirmOtpCode: (req, res) => {
-        Otp.findOne({ userId: req.user.id, token: req.body.otp })
+        Otp.findOneAndRemove({ userId: req.user.id, token: req.body.otp })
             .then(otp => {
                 if (otp) {
                     User.findByIdAndUpdate(req.user.id, { isVerified: true })
