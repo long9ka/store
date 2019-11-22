@@ -55,8 +55,8 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/user', require('./routes/user'));
 app.use('/terms', require('./routes/terms'));
-app.use('/profile', require('./routes/profile'));
 app.use('/', require('./routes/index'));
 
 app.listen(config.PORT, console.log(`Server started on port ${config.PORT}`));

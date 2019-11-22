@@ -32,18 +32,6 @@ router.route('/register')
     .put()
     .delete()
 
-router.route('/verify')
-    .get(checkAuth, index.renderVerify)
-    .post(checkAuth, index.handleConfirmOtpCode)
-    .put()
-    .delete()
-
-router.route('/verify/otp')
-    .get()
-    .post(checkAuth, index.handleSendOptCode)
-    .put()
-    .delete()
-
 router.route('*')
     .get(index.pageNotFound)
     .post()
