@@ -1,6 +1,7 @@
 const transporter = require('../config/transporter');
 const config = require('../config/config');
 const bcrypt = require('bcryptjs');
+const token = require('../config/token-generator');
 
 // models
 const User = require('../models/User');
@@ -61,18 +62,13 @@ module.exports = {
             .catch(error => console.error(error.message));
     },
     handleSendOptCode: (req, res) => {
-        // function random otp code [low, high]
-        const randomCode = (low, high) => {
-            return Math.floor(Math.random() * (high - low + 1) + low);
-        }
-
         Profile.findById(req.user.profileId)
             .then(profile => {
                 if (profile) {
                     // new otp code
                     const otp = new Otp({
                         userId: req.user.id,
-                        token: randomCode(1e5, 1e6 - 1) // otpCode: length = 6
+                        token: token(1e5, 1e6 - 1) // otpCode: length = 6
                     })
                     otp.save()
                         .then()

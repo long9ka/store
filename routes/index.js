@@ -20,6 +20,18 @@ router.route('/login')
     .put()
     .delete()
 
+router.route('/password_reset')
+    .get(index.renderResetPassword)
+    .post(validInput.validResetPassword, index.handleResetPassword)
+    .put()
+    .delete()
+
+router.route('/password_reset/verify')
+    .get()
+    .post(index.handleSendOtpCode)
+    .put()
+    .delete()
+
 router.route('/logout')
     .get(index.handleLogout)
     .post()
