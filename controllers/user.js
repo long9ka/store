@@ -1,5 +1,6 @@
 const transporter = require('../config/transporter');
 const config = require('../config/config');
+const bcrypt = require('bcryptjs');
 
 // models
 const User = require('../models/User');
@@ -26,11 +27,14 @@ module.exports = {
     renderVerify: (req, res) => {
         res.render('verify', { title: 'Email verifier', user: req.user });
     },
+    renderPasswordChange: (req, res) => {
+        res.render('password', { title: 'Change Password', user: req.user });
+    },
     updateProfile: (req, res) => {
         // input valid
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            req.flash('error', errors.array()[0].msg );
+            req.flash('error', errors.array()[0].msg);
             return res.redirect('/user/profile');
         }
         Profile.findByIdAndUpdate(req.user.profileId, { $set: req.body })
@@ -90,6 +94,50 @@ module.exports = {
                 }
                 res.redirect('/user/verify');
             })
-            .catch(error => console.error(error.message))
+            .catch(error => console.error(error.message));
+    },
+    handleChangePassword: (req, res) => {
+        const { password, newPassword, confirmPassword } = req.body;
+        // input valid
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            req.flash('error', errors.array()[0].msg);
+            return res.redirect('/user/password');
+        }
+        User.findById(req.user.id)
+            .then(user => {
+                if (user) {
+                    // compare password
+                    bcrypt.compare(password, user.password, (err, isMatch) => {
+                        if (err) {
+                            return console.error(err.message);
+                        }
+                        if (isMatch) {
+                            // change password
+                            bcrypt.genSalt(10, (err, salt) => {
+                                bcrypt.hash(newPassword, salt, (err, hash) => {
+                                    if (err) {
+                                        return console.error(err.message);
+                                    }
+                                    user.password = hash;
+                                    user.save()
+                                        .then(user => {
+                                            req.flash('success', 'Change password successful');
+                                            res.redirect('/user/password');
+                                        })
+                                        .catch(error => console.log(error.message));
+                                })
+                            })
+                        } else {
+                            req.flash('error', 'Password do not match');
+                            res.redirect('/user/password');
+                        }
+                    })
+                } else {
+                    req.flash('error', 'User not found');
+                    res.redirect('/user/password');
+                }
+            })
+            .catch(error => console.error(error.message));
     }
 }

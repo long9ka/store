@@ -19,6 +19,12 @@ router.route('/verify')
     .put()
     .delete()
 
+router.route('/password')
+    .get(checkAuth, user.renderPasswordChange)
+    .post(checkAuth, validInput.validChangePassword, user.handleChangePassword)
+    .put()
+    .delete()
+
 router.route('/verify/otp')
     .get()
     .post(checkAuth, user.handleSendOptCode)
