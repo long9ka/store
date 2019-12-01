@@ -1,10 +1,12 @@
 const router = require('express').Router();
 
-// controllers
-const terms = require('../controllers/terms');
-
 router.route('/')
-    .get(terms.getTerms)
+    .get((req, res) => {
+        res.render('terms', { 
+            title: 'Terms of service',
+            user: req.user
+        });
+    })
     .post()
     .put()
     .delete()
