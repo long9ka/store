@@ -110,10 +110,15 @@ router.route('/password_reset/verify')
 
                                 // send email
                                 const mailOptions = {
-                                    from: config.EMAIL_USER,
+                                    from: `"Store manager" <${config.EMAIL_USER}>`,
                                     to: profile.email,
-                                    subject: 'Welcome to Store Manager',
-                                    text: otp.token.toString()
+                                    subject: 'Forgot password',
+                                    html: `
+                                        <h1>Hello ${profile.fullName}</h1>
+                                        <br>
+                                        Here is the Otp code you need to confirm: <h1 style="color:blue">${otp.token.toString()}</h1>
+                                        <section>Visit Store manager <a href="storei.herokuapp.com">here</a></section>
+                                    `
                                 }
 
                                 transporter.sendMail(mailOptions)

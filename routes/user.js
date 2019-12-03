@@ -139,10 +139,15 @@ router.route('/verify/otp')
 
                     // send email
                     const mailOptions = {
-                        from: config.EMAIL_USER,
+                        from: `"Store manager" <${config.EMAIL_USER}>`,
                         to: profile.email,
-                        subject: 'Welcome to Store Manager',
-                        text: otp.token.toString()
+                        subject: 'User verification',
+                        html: `
+                            <h1>Hello ${profile.fullName}</h1>
+                            <br>
+                            Here is the Otp code you need to verify account: <h1 style="color:blue">${otp.token.toString()}</h1>
+                            <section>Visit Store manager <a href="storei.herokuapp.com">here</a></section>
+                        `
                     }
 
                     transporter.sendMail(mailOptions)
