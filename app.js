@@ -10,8 +10,6 @@ const passport = require('passport');
 const session = require('express-session');
 const app = express();
 
-app.set(express.static('public'));
-
 // use ejs engine
 app.set('view engine', 'ejs');
 
@@ -45,6 +43,8 @@ app.use(session({
         maxAge: 1000*3600*24
     }
 }))
+
+app.use(express.static('public'));
 
 // init flash
 app.use(flash());
