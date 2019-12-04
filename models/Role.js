@@ -30,6 +30,11 @@ const RoleSchema = new mongoose.Schema({
         lowercase: true,
         enum: ['pending', 'accepted', 'declined'],
         default: 'pending'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: '30d'
     }
 })
 
