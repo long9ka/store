@@ -171,7 +171,13 @@ router.route('/roles')
             .then(roleReq => res.render('roles', { title: 'Roles', user: req.user, roleReq }))
             .catch(error => console.error(error.message));
     })
-    .post((req, res) => {
+    .post(checkAuth, verify, validInput.validAddRoles, (req, res) => {
+        // input valid
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            req.flash('error', errors.array()[0].msg);
+            return res.redirect('/user/roles');
+        }
         const { upgradeTo, message } = req.body;
         Role.findOne({ userId: req.user.id })
             .then(role => {
@@ -194,6 +200,16 @@ router.route('/roles')
                         .catch(error => console.error(error.message));
                 }
             })
+            .catch(error => console.error(error.message));
+    })
+    .put()
+    .delete()
+
+router.route('/roles/confirm')
+    .get()
+    .post(checkAuth, verify, (req, res) => {
+        Role.findOneAndRemove({ userId: req.user.id })
+            .then(res.redirect('/user/roles'))
             .catch(error => console.error(error.message));
     })
     .put()

@@ -100,5 +100,17 @@ module.exports = {
                     return value;
                 }
             })
+    ],
+    validAddRoles: [
+        check('upgradeTo')
+            .not()
+            .isEmpty()
+            .withMessage('UpgradeTo is required'),
+        check('message')
+            .not()
+            .isEmpty()
+            .withMessage('Message is required')
+            .isLength({ max: 100 })
+            .withMessage('Message <= 100 characters')
     ]
 }
