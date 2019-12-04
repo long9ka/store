@@ -172,13 +172,18 @@ router.route('/roles')
             .catch(error => console.error(error.message));
     })
     .post(checkAuth, verify, validInput.validAddRoles, (req, res) => {
+        const { upgradeTo, message } = req.body;
         // input valid
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             req.flash('error', errors.array()[0].msg);
             return res.redirect('/user/roles');
         }
-        const { upgradeTo, message } = req.body;
+        if (req.user.roles.includes(upgradeTo.toLowerCase())) {
+            req.flash('error', 'UpgradeTo do not match');
+            return res.redirect('/user/roles');
+        }
+
         Role.findOne({ userId: req.user.id })
             .then(role => {
                 if (role) {
