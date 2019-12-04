@@ -14,6 +14,7 @@ const Otp = require('../models/Otp');
 
 // middleware
 const checkAuth = require('../middleware/auth');
+const verify = require('../middleware/verify');
 const validInput = require('../middleware/valid');
 
 router.route('/profile')
@@ -160,6 +161,14 @@ router.route('/verify/otp')
             })
             .catch(error => console.error(error.message));
     })
+    .put()
+    .delete()
+
+router.route('/roles')
+    .get(checkAuth, verify, (req, res) => {
+        res.render('roles', { title: 'Roles', user: req.user });
+    })
+    .post()
     .put()
     .delete()
 

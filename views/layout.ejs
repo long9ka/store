@@ -41,8 +41,6 @@
                                 aria-expanded="false">More<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#">Submit CV</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
                                 <li class="divider"></li>
                                 <li><a href="https://github.com/long9ka" target="blank">Contact</a></li>
                                 <li class="divider"></li>
@@ -60,6 +58,15 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="/user/profile">Profile</a></li>
+                                <li>
+                                    <a href="/user/roles">
+                                        Roles
+                                        <% if (!locals.user.isVerified) { %>
+                                            &nbsp;
+                                        <span class="label label-danger">Verify your email</span>
+                                        <% } %>
+                                    </a>
+                                </li>
                                 <li><a href="/user/password">Change password</a></li>
                             </ul>
                         </li>
