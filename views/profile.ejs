@@ -19,12 +19,24 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputRole" class="col-lg-4 control-label">Role</label>
+                    <label for="inputRole" class="col-lg-4 control-label">Roles</label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" id="inputRole" placeholder="Role"
-                            value="<%= user.roles %>" disabled>
+                        <% user.roles.forEach(role => { %>
+                        <% if (role === 'guess') { %>
+                        <span class="label label-default"><%= role %></span>
+                        <% } %>
+                        <% if (role === 'staff') { %>
+                        <span class="label label-success"><%= role %></span>
+                        <% } %>
+                        <% if (role === 'manager') { %>
+                        <span class="label label-primary"><%= role %></span>
+                        <% } %>
+                        <% if (role === 'admin') { %>
+                        <span class="label label-danger"><%= role %></span>
+                        <% } %>
+                        <% }) %>
                         <span class="help-block">
-                            Higher roles, click button
+                            Get higher roles, click button
                             <div class="text-right">
                                 <a href="/user/roles" class="btn btn-info btn-xs">+ Roles</a>
                             </div>
@@ -64,7 +76,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-8">
+                    <div class="col-lg-8 col-lg-offset-8 col-xs-offset-6">
                         <button type="submit" class="btn btn-primary">Save</button>
                         <a href="/" class="btn btn-default">Cancel</a>
                     </div>

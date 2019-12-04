@@ -11,6 +11,7 @@ const token = require('../config/token-generator');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Otp = require('../models/Otp');
+const Role = require('../models/Role');
 
 // middleware
 const checkAuth = require('../middleware/auth');
@@ -166,9 +167,35 @@ router.route('/verify/otp')
 
 router.route('/roles')
     .get(checkAuth, verify, (req, res) => {
-        res.render('roles', { title: 'Roles', user: req.user });
+        Role.findOne({ userId: req.user.id })
+            .then(roleReq => res.render('roles', { title: 'Roles', user: req.user, roleReq }))
+            .catch(error => console.error(error.message));
     })
-    .post()
+    .post((req, res) => {
+        const { upgradeTo, message } = req.body;
+        Role.findOne({ userId: req.user.id })
+            .then(role => {
+                if (role) {
+                    req.flash('error', 'Request is pending ...');
+                    res.redirect('/user/roles');
+                } else {
+                    // new Role
+                    let newRole = new Role({
+                        userId: req.user.id,
+                        currentRoles: req.user.roles,
+                        upgradeTo,
+                        message
+                    })
+                    newRole.save()
+                        .then(result => {
+                            req.flash('success', 'Send request sucessful');
+                            res.redirect('/user/roles');
+                        })
+                        .catch(error => console.error(error.message));
+                }
+            })
+            .catch(error => console.error(error.message));
+    })
     .put()
     .delete()
 
