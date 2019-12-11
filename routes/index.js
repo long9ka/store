@@ -110,7 +110,7 @@ router.route('/password_reset/verify')
 
                                 // send email
                                 const mailOptions = {
-                                    from: `"Store manager" <${config.EMAIL_USER}>`,
+                                    from: `"Store Manager" <${config.EMAIL_USER}>`,
                                     to: profile.email,
                                     subject: 'Forgot password',
                                     html: `
@@ -166,7 +166,7 @@ router.route('*')
         res.status(404).render('error', {
             title: 'Error',
             statusCode: 404,
-            message: `This page isn't available`
+            message: `Sorry, This page isn't available`
         });
     })
     .post()

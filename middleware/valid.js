@@ -4,71 +4,70 @@ module.exports = {
     validRegister: [
         check('username')
             .isLength({ max: 20 })
-            .withMessage('The username must be <5 chars long'),
+            .withMessage('Your username cannot be longer than 20 characters'),
         check('email')
             .isEmail()
             .normalizeEmail(),
         check('password')
             .not()
             .isEmpty()
-            .withMessage('Password is required')
+            .withMessage('Password required')
             .isLength({ min: 5 })
-            .withMessage('The password must be at least 5 chars long')
+            .withMessage('Your password must be at least 5 characters')
             .matches(/\d/)
-            .withMessage('The password must contain a number')
+            .withMessage('Your password must contain at least one number digit')
             .not()
             .isIn(['12345', '123456', 'password'])
-            .withMessage('Do not use a common word as the password ex: 12345, 123456, ...'),
+            .withMessage(`Do not use easily guessed passwords, such as '12345', '123456' or 'password'`),
         check('fullName')
             .not()
             .isEmpty()
-            .withMessage('Full name is required')
+            .withMessage('Full name required')
             .trim()
             .isLength({ max: 60 })
-            .withMessage('Full name must be <60 chars long')
+            .withMessage('Your full name cannot be longer than 60 characters')
             .isLength({ min: 5 })
-            .withMessage('Full name be at least 5 chars long'),
+            .withMessage('Your full name must be at least 5 characters'),
         check('birthday')
             .not()
             .isEmpty()
-            .withMessage('Birthday is required')
+            .withMessage('Birthday required')
     ],
     validUpdateProfile: [
         check('fullName')
             .not()
             .isEmpty()
-            .withMessage('Full name is required')
+            .withMessage('Full name required')
             .trim()
             .isLength({ max: 60 })
-            .withMessage('Full name must be <60 chars long')
+            .withMessage('Your full name cannot be longer than 60 characters')
             .isLength({ min: 5 })
-            .withMessage('Full name be at least 5 chars long'),
+            .withMessage('Your full name must be at least 5 characters'),
         check('birthday')
             .not()
             .isEmpty()
-            .withMessage('Birthday is required')
+            .withMessage('Birthday required')
     ],
     validChangePassword: [
         check('password')
             .not()
             .isEmpty()
-            .withMessage('Password is required'),
+            .withMessage('Password required'),
         check('newPassword')
             .not()
             .isEmpty()
-            .withMessage('New Password is required')
+            .withMessage('New Password required')
             .isLength({ min: 5 })
-            .withMessage('The password must be at least 5 chars long')
+            .withMessage('Your password must be at least 5 characters')
             .matches(/\d/)
-            .withMessage('The password must contain a number')
+            .withMessage('Your password must contain at least one number digit')
             .not()
             .isIn(['12345', '123456', 'password'])
-            .withMessage('Do not use a common word as the password ex: 12345, 123456, ...'),
+            .withMessage(`Do not use easily guessed passwords, such as '12345', '123456' or 'password'`),
         check('confirmPassword')
             .custom((value, { req }) => {
                 if (value !== req.body.newPassword) {
-                    // throw error if passwords do not match
-                    throw new Error("Confirm Password don't match");
+                    throw new Error('Confirm Password doesn not match');
                 } else {
                     return value;
                 }
@@ -78,23 +77,22 @@ module.exports = {
         check('otp')
             .not()
             .isEmpty()
-            .withMessage('Otp is required')
+            .withMessage('Otp required')
         ,
         check('newPassword')
             .not()
             .isEmpty()
-            .withMessage('New Password is required')
+            .withMessage('New Password required')
             .isLength({ min: 5 })
-            .withMessage('The password must be at least 5 chars long')
+            .withMessage('Your password must be at least 5 characters')
             .matches(/\d/)
-            .withMessage('The password must contain a number')
+            .withMessage('Your password must contain at least one number digit')
             .not()
             .isIn(['12345', '123456', 'password'])
-            .withMessage('Do not use a common word as the password ex: 12345, 123456, ...'),
+            .withMessage(`Do not use easily guessed passwords, such as '12345', '123456' or 'password'`),
         check('confirmPassword')
             .custom((value, { req }) => {
                 if (value !== req.body.newPassword) {
-                    // throw error if passwords do not match
                     throw new Error("Confirm Password don't match");
                 } else {
                     return value;
@@ -105,12 +103,12 @@ module.exports = {
         check('upgradeTo')
             .not()
             .isEmpty()
-            .withMessage('UpgradeTo is required'),
+            .withMessage('UpgradeTo required'),
         check('message')
             .not()
             .isEmpty()
-            .withMessage('Message is required')
+            .withMessage('Message required')
             .isLength({ max: 100 })
-            .withMessage('Message <= 100 characters')
+            .withMessage('Your message cannot be longer than 100 characters')
     ]
 }

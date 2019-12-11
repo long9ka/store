@@ -16,13 +16,13 @@ const RoleSchema = new mongoose.Schema({
         {
             type: String,
             lowercase: true,
-            enum: ['guess', 'staff', 'manager', 'admin']
+            enum: ['guest', 'staff', 'manager', 'admin']
         }
     ],
     upgradeTo: {
         type: String,
         lowercase: true,
-        enum: ['guess', 'staff', 'manager', 'admin'],
+        enum: ['guest', 'staff', 'manager', 'admin'],
         required: true
     },
     status: {

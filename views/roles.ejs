@@ -8,7 +8,7 @@
                     <label for="inputRole" class="col-lg-4 control-label">Your roles</label>
                     <div class="col-lg-8">
                         <% user.roles.forEach(role => { %>
-                        <% if (role === 'guess') { %>
+                        <% if (role === 'guest') { %>
                         <span class="label label-default"><%= role %></span>
                         <% } %>
                         <% if (role === 'staff') { %>
@@ -36,8 +36,8 @@
                     <label for="select" class="col-lg-4 control-label">Upgrade to</label>
                     <div class="col-lg-8">
                         <select class="form-control" id="select" name="upgradeTo">
-                            <% if (!user.roles.includes('guess')) { %>
-                            <option>Guess</option>
+                            <% if (!user.roles.includes('guest')) { %>
+                            <option>Guest</option>
                             <% } %>
                             <% if (!user.roles.includes('staff')) { %>
                             <option>Staff</option>
@@ -56,7 +56,7 @@
                     <div class="col-lg-8">
                         <textarea class="form-control" rows="3" id="textArea" name="message"
                             style="margin: 0px 113.156px 0px 0px; width: 100%; height: 146px;"></textarea>
-                        <span class="help-block">Message is required. About 100 chars</span>
+                        <span class="help-block">Message required</span>
                     </div>
                 </div>
                 <div class="form-group">

@@ -22,7 +22,7 @@
                     <label for="inputRole" class="col-lg-4 control-label">Roles</label>
                     <div class="col-lg-8">
                         <% user.roles.forEach(role => { %>
-                        <% if (role === 'guess') { %>
+                        <% if (role === 'guest') { %>
                         <span class="label label-default"><%= role %></span>
                         <% } %>
                         <% if (role === 'staff') { %>

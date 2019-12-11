@@ -141,7 +141,7 @@ router.route('/verify/otp')
 
                     // send email
                     const mailOptions = {
-                        from: `"Store manager" <${config.EMAIL_USER}>`,
+                        from: `"Store Manager" <${config.EMAIL_USER}>`,
                         to: profile.email,
                         subject: 'User verification',
                         html: `

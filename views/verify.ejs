@@ -5,10 +5,10 @@
             <fieldset>
                 <legend>Email Verifier</legend>
                 <div class="form-group">
-                    <label for="inputOtp" class="col-lg-3 control-label">Otp Code</label>
+                    <label for="inputOtp" class="col-lg-3 control-label">Code</label>
                     <div class="col-lg-6">
-                        <input type="text" class="form-control" id="inputOtp" placeholder="Otp Code" name="otp">
-                        <span class="help-block">Send Otp code via email</span>
+                        <input type="text" class="form-control" id="inputOtp" placeholder="Otp" name="otp">
+                        <span class="help-block">Send otp to email</span>
                     </div>
                     <div class="col-lg-3">
                         <button type="submit" class="btn btn-primary">Confirm</button>
@@ -19,7 +19,7 @@
         <form class="form-horizontal" action="/user/verify/otp" method="POST">
             <div class="form-group">
                 <div class="col-lg-10 col-lg-offset-3">
-                    <button type="submit" class="btn btn-default">Send otp code</button>
+                    <button type="submit" class="btn btn-default">Send code</button>
                 </div>
             </div>
         </form>

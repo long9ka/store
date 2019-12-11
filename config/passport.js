@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 
-// validating input
 const { validationResult } = require('express-validator');
 
 module.exports = (passport) => {
@@ -29,7 +28,7 @@ module.exports = (passport) => {
             User.findOne({ username })
                 .then(user => {
                     if (!user) {
-                        return done(null, false, { message: 'Username is not registered' });
+                        return done(null, false, { message: 'Username not registered' });
                     }
                     bcrypt.compare(password, user.password, (err, isMatch) => {
                         if (err) {
@@ -44,6 +43,7 @@ module.exports = (passport) => {
                 })
         }
     ))
+
     // passport register
     passport.use('register', new LocalStrategy(
         {
@@ -80,12 +80,12 @@ module.exports = (passport) => {
                                 .then()
                                 .catch(error => console.error(error.message))
 
-                            // new guess User 
+                            // new User 
                             let newUser = new User({
                                 username,
                                 password,
                                 profileId: newProfile.id,
-                                roles: ['guess']
+                                roles: ['guest']
                             })
                             // bcrypt
                             bcrypt.genSalt(10, (err, salt) => {

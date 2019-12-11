@@ -60,7 +60,7 @@
                                 <strong class="text-primary"><%= locals.user.username %></strong>
                                 <% } else if (locals.user.roles.includes('staff')) { %>
                                 <strong class="text-success"><%= locals.user.username %></strong>
-                                <% } else if (locals.user.roles.includes('guess')) { %>
+                                <% } else if (locals.user.roles.includes('guest')) { %>
                                 <strong><%= locals.user.username %></strong>
                                 <% } %>
                                 
