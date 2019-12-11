@@ -1,40 +1,96 @@
-<div class="row">
-    <div class="col-lg-4"></div>
-    <div class="col-lg-4">
-        <form class="form-horizontal" action="/user/roles" method="POST">
-            <fieldset>
-                <legend>Add Roles (+)</legend>
-                <div class="form-group">
-                    <label for="inputRole" class="col-lg-4 control-label">Your roles</label>
-                    <div class="col-lg-8">
-                        <% user.roles.forEach(role => { %>
-                        <% if (role === 'guest') { %>
-                        <span class="label label-default"><%= role %></span>
-                        <% } %>
-                        <% if (role === 'staff') { %>
-                        <span class="label label-success"><%= role %></span>
-                        <% } %>
-                        <% if (role === 'manager') { %>
-                        <span class="label label-primary"><%= role %></span>
-                        <% } %>
-                        <% if (role === 'admin') { %>
-                        <span class="label label-danger"><%= role %></span>
-                        <% } %>
-                        <% }) %>
-                        <span class="help-block">
-                            <% if (user.roles.length > 1) { %>
-                            <%= user.roles.length %> Roles
-                            <% } else { %>
-                            <%= user.roles.length %> Role
-                            <% } %>
-                        </span>
+<div class="col-lg-3">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#myRoles" data-toggle="tab">My Roles</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <br>
+        <div class="tab-pane fade active in" id="myRoles">
+            <% user.roles.forEach(role => { %>
+            <% if (role === 'guest') { %>
+            <span class="label label-default"><%= role %></span>
+            <% } %>
+            <% if (role === 'staff') { %>
+            <span class="label label-success"><%= role %></span>
+            <% } %>
+            <% if (role === 'manager') { %>
+            <span class="label label-primary"><%= role %></span>
+            <% } %>
+            <% if (role === 'admin') { %>
+            <span class="label label-danger"><%= role %></span>
+            <% } %>
+            <% }) %>
+            <span class="help-block">
+                <%= user.roles.length %>
+                <%= user.roles.length > 1? 'roles' : 'role' %>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <ul class="nav nav-tabs">
+        <% if (option === 'list') { %>
+        <% if (user.roles.includes(Array('admin') || user.roles.includes('manager'))) { %>
+        <li class="active"><a href="/user/roles?option=list" aria-expanded="false">List Request</a></li>
+        <% } else { %>
+        <% option = 'add' %>
+        <li class="disabled"><a aria-expanded="false">List Request</a></li>
+        <% } %>
+        <% } else { %>
+        <% if (user.roles.includes(Array('admin') || user.roles.includes('manager'))) { %>
+        <li class=""><a href="/user/roles?option=list" aria-expanded="false">List Request</a></li>
+        <% } else { %>
+        <li class="disabled"><a aria-expanded="false">List Request</a></li>
+        <% } %>
+        <% } %>
+        <% if (option === 'add') { %>
+        <li class="active"><a href="/user/roles?option=add" aria-expanded="true">Add roles</a></li>
+        <% } else { %>
+        <li class=""><a href="/user/roles?option=add" aria-expanded="true">Add roles</a></li>
+        <% } %>
+        <% if (option === 'delete') { %>
+        <li class="active"><a href="/user/roles?option=delete" aria-expanded="false">Delete Roles</a></li>
+        <% } else { %>
+        <li class=""><a href="/user/roles?option=delete" aria-expanded="false">Delete Roles</a></li>
+        <% } %>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <br>
+        <div class="tab-pane fade active in">
+            <% if (option === 'list') { %>
+            hello world
+            <% } %>
+            <% if (option === 'add') { %>
+            <% if (user.roles.length == 4) { %>
+            <label class="text-warning control-label">
+                You had 4 roles, full permissions
+            </label>
+            <% } else { %>
+            <% if (roleReq) { %>
+            <form class="form-horizontal" action="/user/roles/confirm" method="POST">
+                <fieldset>
+                    <% if (roleReq.status === 'pending') { %>
+                    <label class="text-center text-warning">Your request is still pending...</label>
+                    <div class="col-lg-offset-8">
+                        <button type="submit" class="btn btn-default btn-sm">Cancle</button>
                     </div>
-                </div>
-                <% if (!roleReq) { %>
-                <% if (user.roles.length != 4) { %>
-                <div class="form-group">
-                    <label for="select" class="col-lg-4 control-label">Upgrade to</label>
-                    <div class="col-lg-8">
+                    <% } else if (roleReq.status === 'accepted') { %>
+                    <label class="text-center text-success">Your request was accepted</label>
+                    <div class="col-lg-offset-8">
+                        <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                    </div>
+                    <% } else if (roleReq.status === 'declined') { %>
+                    <label class="text-center text-danger">Your request was declined</label>
+                    <div class="col-lg-offset-8">
+                        <button type="submit" class="btn btn-danger btn-sm">Confirm</button>
+                    </div>
+                    <% } %>
+                </fieldset>
+            </form>
+            <% } else { %>
+            <form class="form-horizontal" action="/user/roles/add" method="POST">
+                <fieldset>
+                    <label for="select" class="col-lg-3 control-label">Up to</label>
+                    <div class="col-lg-9">
                         <select class="form-control" id="select" name="upgradeTo">
                             <% if (!user.roles.includes('guest')) { %>
                             <option>Guest</option>
@@ -50,87 +106,40 @@
                             <% } %>
                         </select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="textArea" class="col-lg-4 control-label">Message</label>
-                    <div class="col-lg-8">
+                    <label for="textArea" class="col-lg-3 control-label">Message</label>
+                    <div class="col-lg-9">
                         <textarea class="form-control" rows="3" id="textArea" name="message"
-                            style="margin: 0px 113.156px 0px 0px; width: 100%; height: 146px;"></textarea>
+                            style="margin: 0px 113.156px 0px 0px; width: 100%; height: 100px;"></textarea>
                         <span class="help-block">Message required</span>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-10 col-lg-offset-8">
-                        <button type="submit" class="btn btn-info">Send request</button>
-                    </div>
-                </div>
-                <% } else { %>
-                <div class="form-group">
-                    <div class="col-lg-4"></div>
-                    <div class="col-lg-8">
-                        <label for="textArea" class="text-warning control-label">You had 4 roles, full
-                            permissions</label>
-                    </div>
-                </div>
-                <% } %>
-                <div class="form-group">
-                    <div class="col-lg-4"></div>
-                    <div class="col-lg-8">
-                        You can also <a href="/user/roles/delete" class="text-danger">delete roles</a>
-                    </div>
-                </div>
-                <% } %>
-            </fieldset>
-        </form>
-        <% if (roleReq) { %>
-        <form class="form-horizontal" action="/user/roles/confirm" method="POST">
-            <fieldset>
-                <div class="form-group">
-                    <div class="col-lg-12">
-                        <% if (roleReq.status == 'pending') { %>
-                        <h5 class="text-center text-warning">Your request is still pending...</h5>
-                        <% } else if (roleReq.status == 'accepted') { %>
-                        <h5 class="text-center text-success">Your request was accepted</h5>
-                        <% } else if (roleReq.status == 'declined') { %>
-                        <h5 class="text-center text-danger">Your request was declined</h5>
-                        <% } %>
-                    </div>
-                </div>
-                <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-8 col-xs-offset-8">
-                        <% if (roleReq.status == 'pending') { %>
-                        <button type="submit" class="btn btn-default">Cancle</button>
-                        <% } else if (roleReq.status == 'accepted') { %>
-                        <button type="submit" class="btn btn-success">Confirm</button>
-                        <% } else if (roleReq.status == 'declined') { %>
-                        <button type="submit" class="btn btn-default">Confirm</button>
-                        <% } %>
+                        <button type="submit" class="btn btn-info">Send</button>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-4"></div>
-                    <div class="col-lg-8">
-                        You can also <a href="/user/roles/delete" class="text-danger">delete roles</a>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
-        <% } %>
-    </div>
-    <div class="col-lg-4">
-        <% if (success != '') { %>
-        <div class="alert alert-dismissible alert-success">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong><%= success %></strong>
+                </fieldset>
+            </form>
+            <% } %>
+            <% } %>
+            <% } %>
+
+            <% if (option === 'delete') { %>
+            hello world :delete
+            <% } %>
         </div>
-        <% } %>
-        <% if (error != '') { %>
-        <div class="alert alert-dismissible alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>
-                <%= error %>
-            </strong>
-        </div>
-        <% } %>
     </div>
+</div>
+<div class="col-lg-4">
+    <% if (success != '') { %>
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong><%= success %></strong>
+    </div>
+    <% } %>
+    <% if (error != '') { %>
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>
+            <%= error %>
+        </strong>
+    </div>
+    <% } %>
 </div>

@@ -6,11 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>
-        <% if (locals.title) { %>
-        <%= title %>
-        <% } else { %>
-        Store
-        <% } %>
+        <%= locals.title || 'Store manager' %>
     </title>
     <!--Import Bootswatch paper-->
     <link rel="stylesheet" href="https://bootswatch.com/3/paper/bootstrap.min.css">
@@ -54,16 +50,16 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                 aria-expanded="false">
                                 <!--Check roles-->
-                                <% if (locals.user.roles.includes('admin')) { %>
-                                <strong class="text-danger"><%= locals.user.username %></strong>
-                                <% } else if (locals.user.roles.includes('manager')) { %>
-                                <strong class="text-primary"><%= locals.user.username %></strong>
-                                <% } else if (locals.user.roles.includes('staff')) { %>
-                                <strong class="text-success"><%= locals.user.username %></strong>
-                                <% } else if (locals.user.roles.includes('guest')) { %>
-                                <strong><%= locals.user.username %></strong>
+                                <% if (user.roles.includes('admin')) { %>
+                                <strong class="text-danger"><%= user.username %></strong>
+                                <% } else if (user.roles.includes('manager')) { %>
+                                <strong class="text-primary"><%= user.username %></strong>
+                                <% } else if (user.roles.includes('staff')) { %>
+                                <strong class="text-success"><%= user.username %></strong>
+                                <% } else if (user.roles.includes('guest')) { %>
+                                <strong><%= user.username %></strong>
                                 <% } %>
-                                
+
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">

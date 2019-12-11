@@ -3,7 +3,7 @@
     <div class="col-lg-4">
         <form class="form-horizontal" action="/user/profile" method="POST">
             <fieldset>
-                <legend>View Profile</legend>
+                <legend>My Profile</legend>
                 <div class="form-group">
                     <label for="inputFullName" class="col-lg-4 control-label">Full Name</label>
                     <div class="col-lg-8">
@@ -36,9 +36,9 @@
                         <% } %>
                         <% }) %>
                         <span class="help-block">
-                            Get higher roles, click button
+                            To grant permission, click this button
                             <div class="text-right">
-                                <a href="/user/roles" class="btn btn-info btn-sm">+ Roles</a>
+                                <a href="/user/roles?option=add" class="btn btn-info btn-sm">Grant permission</a>
                             </div>
                         </span>
                     </div>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-8 col-xs-offset-6">
+                    <div class="col-lg-8 col-lg-offset-8">
                         <button type="submit" class="btn btn-primary">Save</button>
                         <a href="/" class="btn btn-default">Cancel</a>
                     </div>

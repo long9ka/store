@@ -168,9 +168,20 @@ router.route('/verify/otp')
 router.route('/roles')
     .get(checkAuth, verify, (req, res) => {
         Role.findOne({ userId: req.user.id })
-            .then(roleReq => res.render('roles', { title: 'Roles', user: req.user, roleReq }))
+            .then(roleReq => res.render('roles', { 
+                title: 'Roles',
+                user: req.user,
+                roleReq,
+                option: !['list', 'add', 'delete'].includes(req.query.option)? 'list' : req.query.option
+            }))
             .catch(error => console.error(error.message));
     })
+    .post()
+    .put()
+    .delete()
+
+router.route('/roles/add')
+    .get()
     .post(checkAuth, verify, validInput.validAddRoles, (req, res) => {
         const { upgradeTo, message } = req.body;
         // input valid
@@ -180,7 +191,7 @@ router.route('/roles')
             return res.redirect('/user/roles');
         }
         if (req.user.roles.includes(upgradeTo.toLowerCase())) {
-            req.flash('error', 'UpgradeTo do not match');
+            req.flash('error', 'UpgradeTo does not match');
             return res.redirect('/user/roles');
         }
 
@@ -199,7 +210,7 @@ router.route('/roles')
                     })
                     newRole.save()
                         .then(result => {
-                            req.flash('success', 'Send request sucessful');
+                            req.flash('success', 'Your request has been sent successfully');
                             res.redirect('/user/roles');
                         })
                         .catch(error => console.error(error.message));
