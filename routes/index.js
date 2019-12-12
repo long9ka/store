@@ -102,7 +102,7 @@ router.route('/password_reset/verify')
                                 // new otp code
                                 const otp = new Otp({
                                     userId: user.id,
-                                    token: token(1e5, 1e6 - 1) // otpCode: length = 6
+                                    token: token(1e5, 1e6 - 1)
                                 })
                                 otp.save()
                                     .then()

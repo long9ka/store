@@ -133,7 +133,7 @@ router.route('/verify/otp')
                     // new otp code
                     const otp = new Otp({
                         userId: req.user.id,
-                        token: token(1e5, 1e6 - 1) // otpCode: length = 6
+                        token: token(1e5, 1e6 - 1)
                     })
                     otp.save()
                         .then()
@@ -168,11 +168,11 @@ router.route('/verify/otp')
 router.route('/roles')
     .get(checkAuth, verify, (req, res) => {
         Role.findOne({ userId: req.user.id })
-            .then(roleReq => res.render('roles', { 
+            .then(roleReq => res.render('roles', {
                 title: 'Roles',
                 user: req.user,
                 roleReq,
-                option: !['list', 'add', 'delete'].includes(req.query.option)? 'list' : req.query.option
+                option: !['list', 'add', 'delete'].includes(req.query.option) ? 'list' : req.query.option
             }))
             .catch(error => console.error(error.message));
     })
@@ -188,18 +188,18 @@ router.route('/roles/add')
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             req.flash('error', errors.array()[0].msg);
-            return res.redirect('/user/roles');
+            return res.redirect('/user/roles?option=add');
         }
         if (req.user.roles.includes(upgradeTo.toLowerCase())) {
             req.flash('error', 'UpgradeTo does not match');
-            return res.redirect('/user/roles');
+            return res.redirect('/user/roles?option=add');
         }
 
         Role.findOne({ userId: req.user.id })
             .then(role => {
                 if (role) {
                     req.flash('error', 'Request is pending ...');
-                    res.redirect('/user/roles');
+                    res.redirect('/user/roles?option=add');
                 } else {
                     // new Role
                     let newRole = new Role({
@@ -211,9 +211,50 @@ router.route('/roles/add')
                     newRole.save()
                         .then(result => {
                             req.flash('success', 'Your request has been sent successfully');
-                            res.redirect('/user/roles');
+                            res.redirect('/user/roles?option=add');
                         })
                         .catch(error => console.error(error.message));
+                }
+            })
+            .catch(error => console.error(error.message));
+    })
+    .put()
+    .delete()
+
+router.route('/roles/delete')
+    .get()
+    .post((req, res) => {
+        const { deleteRole, password } = req.body;
+
+        if (deleteRole.toLowerCase() === 'guest') {
+            req.flash('error', 'Access denied');
+            return res.redirect('/user/roles?option=delete');
+        }
+
+        User.findById(req.user.id)
+            .then(user => {
+                if (user) {
+                    // compare password
+                    bcrypt.compare(password, user.password, (err, isMatch) => {
+                        if (err) {
+                            return console.error(err.message);
+                        }
+                        if (isMatch) {
+                            user.roles.pull(deleteRole);
+                            user.save()
+                                .then(user => {
+                                    req.flash('success', `Delete ${deleteRole} successful`);
+                                    res.redirect('/user/roles?option=delete');
+                                })
+                                .catch(error => console.error(error.message));
+                        } else {
+                            req.flash('error', 'Password incorrect');
+                            res.redirect('/user/roles?option=delete');
+                        }
+                    })
+                } else {
+                    req.flash('error', 'User not found');
+                    res.redirect('/login');
                 }
             })
             .catch(error => console.error(error.message));

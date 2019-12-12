@@ -122,7 +122,39 @@
             <% } %>
 
             <% if (option === 'delete') { %>
-            hello world :delete
+            <% if (user.roles.length === 1) { %>
+            <label class="text-warning control-label">
+                You cannot access this feature
+            </label>
+            <% } else { %>
+            <form class="form-horizontal" action="/user/roles/delete" method="POST">
+                <fieldset>
+                    <label for="select" class="col-lg-3 control-label">Delete</label>
+                    <div class="col-lg-9">
+                        <select class="form-control" id="select" name="deleteRole">
+                            <% if (user.roles.includes('staff')) { %>
+                            <option>Staff</option>
+                            <% } %>
+                            <% if (user.roles.includes('manager')) { %>
+                            <option>Manager</option>
+                            <% } %>
+                            <% if (user.roles.includes('admin')) { %>
+                            <option>Admin</option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <label for="inputPassword" class="col-lg-3 control-label">Password</label>
+                    <div class="col-lg-9">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Confirm password"
+                            name="password">
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-8 col-xs-offset-8">
+                        <br>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </fieldset>
+            </form>
+            <% } %>
             <% } %>
         </div>
     </div>
