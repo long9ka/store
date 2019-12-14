@@ -1,13 +1,14 @@
 const { check } = require('express-validator');
 
 module.exports = {
-    validRegister: [
+    register: [
         check('username')
             .isLength({ max: 20 })
             .withMessage('Your username cannot be longer than 20 characters'),
         check('email')
             .isEmail()
-            .normalizeEmail(),
+            .normalizeEmail()
+            .withMessage('Email does not match'),
         check('password')
             .not()
             .isEmpty()
@@ -33,7 +34,7 @@ module.exports = {
             .isEmpty()
             .withMessage('Birthday required')
     ],
-    validUpdateProfile: [
+    updateProfile: [
         check('fullName')
             .not()
             .isEmpty()
@@ -48,7 +49,7 @@ module.exports = {
             .isEmpty()
             .withMessage('Birthday required')
     ],
-    validChangePassword: [
+    changePassword: [
         check('password')
             .not()
             .isEmpty()
@@ -73,8 +74,8 @@ module.exports = {
                 }
             })
     ],
-    validResetPassword: [
-        check('otp')
+    resetPassword: [
+        check('token')
             .not()
             .isEmpty()
             .withMessage('Otp required')
@@ -93,13 +94,13 @@ module.exports = {
         check('confirmPassword')
             .custom((value, { req }) => {
                 if (value !== req.body.newPassword) {
-                    throw new Error("Confirm Password don't match");
+                    throw new Error("Confirm Password does not match");
                 } else {
                     return value;
                 }
             })
     ],
-    validAddRoles: [
+    addRoles: [
         check('upgradeTo')
             .not()
             .isEmpty()
@@ -110,5 +111,11 @@ module.exports = {
             .withMessage('Message required')
             .isLength({ max: 100 })
             .withMessage('Your message cannot be longer than 100 characters')
+    ],
+    deleteRoles: [
+        check('password')
+            .not()
+            .isEmpty()
+            .withMessage('Password required')
     ]
 }

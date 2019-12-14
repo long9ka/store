@@ -1,3 +1,6 @@
+<!--Include ejs-->
+<%- include('partials/color', { role: locals.user.roles }) %>
+
 <html lang="en">
 
 <head>
@@ -49,17 +52,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                 aria-expanded="false">
-                                <!--Check roles-->
-                                <% if (user.roles.includes('admin')) { %>
-                                <strong class="text-danger"><%= user.username %></strong>
-                                <% } else if (user.roles.includes('manager')) { %>
-                                <strong class="text-primary"><%= user.username %></strong>
-                                <% } else if (user.roles.includes('staff')) { %>
-                                <strong class="text-success"><%= user.username %></strong>
-                                <% } else if (user.roles.includes('guest')) { %>
-                                <strong><%= user.username %></strong>
-                                <% } %>
-
+                                <strong class="text-<%= color %>"><%= user.username %></strong>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
@@ -84,12 +77,14 @@
         </div>
 
     </nav>
+
     <!--Body-->
     <div class="container page-header">
         <br>
         <br>
         <%- body %>
     </div>
+
     <!--Import bootstrap js-->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>

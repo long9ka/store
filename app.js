@@ -1,4 +1,4 @@
-// use .env
+// .env
 require('dotenv').config();
 
 const config = require('./config/config');
@@ -10,7 +10,7 @@ const passport = require('passport');
 const session = require('express-session');
 const app = express();
 
-// use ejs engine
+// view engine
 app.set('view engine', 'ejs');
 
 // connect database
@@ -46,11 +46,11 @@ app.use(session({
 
 app.use(express.static('public'));
 
-// init flash
+// flash
 app.use(flash());
 app.use(require('./middleware/flash'));
 
-// use passport
+// passport
 require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());

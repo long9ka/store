@@ -1,0 +1,14 @@
+<% if (role) { %>
+<% if (role.includes('guest')) { %>
+<% color = 'default' %>
+<% } %>
+<% if (role.includes('staff')) { %>
+<% color = 'success' %>
+<% } %>
+<% if (role.includes('manager')) { %>
+<% color = 'primary' %>
+<% } %>
+<% if (role.includes('admin')) { %>
+<% color = 'danger' %>
+<% } %>
+<% } %>

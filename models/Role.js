@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const RoleSchema = new mongoose.Schema({
     userId: {
         type: mongoose.SchemaTypes.ObjectId,
-        unique: true,
-        required: true
+        required: true,
+        ref: 'user'
     },
     message: {
         type: String,
@@ -12,14 +12,7 @@ const RoleSchema = new mongoose.Schema({
         maxlength: 100,
         required: true
     },
-    currentRoles: [
-        {
-            type: String,
-            lowercase: true,
-            enum: ['guest', 'staff', 'manager', 'admin']
-        }
-    ],
-    upgradeTo: {
+    request: {
         type: String,
         lowercase: true,
         enum: ['guest', 'staff', 'manager', 'admin'],
