@@ -18,10 +18,13 @@ const Otp = require('../models/Otp');
 const checkAuth = require('../middleware/auth');
 const validInput = require('../middleware/valid');
 const verify = require('../middleware/verify');
-
 router.route('/')
     .get(checkAuth, verify, (req, res) => {
-        res.render('page', { user: req.user });
+        Profile.findById(req.user.profileId)
+        .then(profile=>{
+            res.render('page', { user: req.user, profile});
+        })
+       
     })
     .post()
     .put()
