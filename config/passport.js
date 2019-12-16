@@ -52,7 +52,6 @@ module.exports = passport => {
             passReqToCallback: true
         },
         async (req, username, password, done) => {
-
             // validation
             const errors = validationResult(req);
             if (!errors.isEmpty()) {

@@ -101,10 +101,10 @@ module.exports = {
             })
     ],
     addRoles: [
-        check('upgradeTo')
+        check('request')
             .not()
             .isEmpty()
-            .withMessage('UpgradeTo required'),
+            .withMessage('Request required'),
         check('message')
             .not()
             .isEmpty()

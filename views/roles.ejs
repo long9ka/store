@@ -5,202 +5,197 @@
     <div id="myTabContent" class="tab-content">
         <br>
         <div class="tab-pane fade active in" id="myRoles">
-            <% user.roles.forEach(role => { %>
+            <% user.roles.map(role => { %>
             <%- include('partials/color', { role }) %>
             <span class="label label-<%= color %>"><%= role %></span>
             <% }) %>
-            <span class="help-block">
-                <%= user.roles.length %>
-                <%= user.roles.length > 1? 'roles' : 'role' %>
-            </span>
+            <span class="help-block"></span>
         </div>
     </div>
 </div>
 <div class="col-lg-5">
     <ul class="nav nav-tabs">
-        <% if (option === 'list') { %>
-        <% if (user.roles.includes(Array('admin') || user.roles.includes('manager'))) { %>
-        <li class="active"><a href="/user/roles?option=list" aria-expanded="false">List Request</a></li>
-        <% } else { %>
-        <% option = 'add' %>
-        <li class="disabled"><a aria-expanded="false">List Request</a></li>
-        <% } %>
-        <% } else { %>
-        <% if (user.roles.includes(Array('admin') || user.roles.includes('manager'))) { %>
-        <li class=""><a href="/user/roles?option=list" aria-expanded="false">List Request</a></li>
-        <% } else { %>
-        <li class="disabled"><a aria-expanded="false">List Request</a></li>
-        <% } %>
-        <% } %>
-        <% if (option === 'add') { %>
-        <li class="active"><a href="/user/roles?option=add" aria-expanded="true">Add roles</a></li>
-        <% } else { %>
-        <li class=""><a href="/user/roles?option=add" aria-expanded="true">Add roles</a></li>
-        <% } %>
-        <% if (option === 'delete') { %>
-        <li class="active"><a href="/user/roles?option=delete" aria-expanded="false">Delete Roles</a></li>
-        <% } else { %>
-        <li class=""><a href="/user/roles?option=delete" aria-expanded="false">Delete Roles</a></li>
-        <% } %>
+        <li class="<%= views.requests.disable%> <%= views.requests.active %>">
+            <a href="/user/roles?option=requests">Requests</a>
+        </li>
+        <li class="<%= views.add.disable%> <%= views.add.active %>">
+            <a href="/user/roles?option=add">Add roles</a>
+        </li>
+        <li class="<%= views.delete.disable%> <%= views.delete.active %>">
+            <a href="/user/roles?option=delete">Delete roles</a>
+        </li>
     </ul>
-    <div id="myTabContent" class="tab-content">
+    <div>
         <br>
-        <div class="tab-pane fade active in">
-            <% if (option === 'list') { %>
-            <table class="table table-striped table-hover ">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Column d</th>
-                        <th>Column heading</th>
-                        <th>Column heading</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                    <tr class="info">
-                        <td>3</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                    <tr class="success">
-                        <td>4</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                    <tr class="danger">
-                        <td>5</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                    <tr class="warning">
-                        <td>6</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                    <tr class="active">
-                        <td>7</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                        <td>Column content</td>
-                    </tr>
-                </tbody>
-            </table>
-
+        <div class="tab-pane fade in active">
+            <% if (views.requests.active) { %>
+                <% if (!views.requests.list.length) { %>
+                    <label class="text-warning control-label">
+                        No requests
+                    </label>
+                <% } else { %>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                              <th>Username</th>
+                              <th>Request</th>
+                            </tr>
+                          </thead>
+                        <tbody>
+                            <% views.requests.list.map(role => { %>
+                                <%- include('partials/color', { role: role.request }) %>
+                                <tr class="<%= color %>">
+                                    <td>
+                                        <a data-toggle="modal" data-target="#myModal-<%=role.id %>">
+                                            <%- include('partials/color', { role: role.userId.roles }) %>
+                                            <strong class="text-<%= color %>"><%= role.userId.username %></strong>
+                                        </a>
+                                    </td>
+                                    <td><%= role.request %></td>
+                                    <td class="col-lg-2">
+                                        <form action="/user/roles/<%= role.id %>" style="margin: 0;" method="post">
+                                            <button type="submit" class="btn btn-success btn-xs" name="response" value="accepted">o</button>
+                                            <button type="submit" class="btn btn-danger btn-xs" name="response" value="declined">x</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <div class="modal" id="myModal-<%= role.id %>">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title"><strong><%= role.userId.username %></strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <h6 class="col-lg-3">Full Name</h6>
+                                                    <h6 class="text-<%= color %>">
+                                                        <strong><%= role.userId.profileId.fullName %></strong>
+                                                    </h6>
+                                                </div>
+                                                <div class="row">
+                                                    <h6 class="col-lg-3">Email</h6>
+                                                    <h6 >
+                                                        <strong><%= role.userId.profileId.email %></strong>
+                                                    </h6>
+                                                </div>
+                                                <div class="row">
+                                                    <h6 class="col-lg-3">Birthday</h6>
+                                                    <h6 class="text-info">
+                                                        <strong><%= role.userId.profileId.birthday %></strong>
+                                                    </h6>
+                                                </div>
+                                                <div class="row">
+                                                    <h6 class="col-lg-3">Gender</h6>
+                                                    <h6 class="text-warning">
+                                                        <strong><%= role.userId.profileId.gender %></strong>
+                                                    </h6>
+                                                </div>
+                                                <div class="row">
+                                                    <h6 class="col-lg-3"><strong>Message</strong></h6>
+                                                    <h6><em><%= role.message %></em></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="/user/roles/<%= role.id %>" method="post">
+                                                <button type="submit" class="btn btn-success" name="response" value="accepted">Accept</button>
+                                                <button type="submit" class="btn btn-danger" name="response" value="declined">Decline</button>
+                                            </form>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
             <% } %>
-            <% if (option === 'add') { %>
-            <% if (user.roles.length == 4) { %>
-            <label class="text-warning control-label">
-                You had 4 roles, full permissions
-            </label>
-            <% } else { %>
-            <% if (roleReq) { %>
-            <form class="form-horizontal" action="/user/roles/confirm" method="POST">
-                <fieldset>
-                    <% if (roleReq.status === 'pending') { %>
-                    <label class="text-center text-warning">Your request is still pending...</label>
-                    <div class="col-lg-offset-8">
-                        <button type="submit" class="btn btn-default btn-sm">Cancle</button>
-                    </div>
-                    <% } else if (roleReq.status === 'accepted') { %>
-                    <label class="text-center text-success">Your request was accepted</label>
-                    <div class="col-lg-offset-8">
-                        <button type="submit" class="btn btn-success btn-sm">Confirm</button>
-                    </div>
-                    <% } else if (roleReq.status === 'declined') { %>
-                    <label class="text-center text-danger">Your request was declined</label>
-                    <div class="col-lg-offset-8">
-                        <button type="submit" class="btn btn-danger btn-sm">Confirm</button>
-                    </div>
+            <div class="col-lg-11">
+                <% if (views.add.active) { %>
+                    <% if (views.add.full) { %>
+                        <label class="text-warning control-label">
+                            You had 4 roles, full permissions
+                        </label>
+                    <% } else { %>
+                        <% if (views.add.role) { %>
+                            <form class="form-horizontal" action="/user/roles" method="POST">
+                                <fieldset>
+                                    <% if (views.add.role.status === 'pending') { %>
+                                    <label class="text-center text-warning">Your request is still pending...</label>
+                                    <div class="col-lg-offset-8">
+                                        <button type="submit" class="btn btn-default btn-sm">Cancle</button>
+                                    </div>
+                                    <% } else if (views.add.role.status === 'accepted') { %>
+                                    <label class="text-center text-success">Your request was accepted</label>
+                                    <div class="col-lg-offset-8">
+                                        <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                                    </div>
+                                    <% } else if (views.add.role.status === 'declined') { %>
+                                    <label class="text-center text-danger">Your request was declined</label>
+                                    <div class="col-lg-offset-8">
+                                        <button type="submit" class="btn btn-danger btn-sm">Confirm</button>
+                                    </div>
+                                    <% } %>
+                                </fieldset>
+                            </form>
+                        <% } else { %>
+                            <form class="form-horizontal" action="/user/roles/add" method="POST">
+                                <fieldset>
+                                    <label for="select" class="col-lg-3 control-label">Add</label>
+                                    <div class="col-lg-9">
+                                        <select class="form-control" id="select" name="request">
+                                            <% ['guest', 'staff', 'manager', 'admin'].map(role => { %>
+                                                <% if (!user.roles.includes(role)) { %>
+                                                <option><%= role %></option>
+                                                <% } %>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                    <label for="textArea" class="col-lg-3 control-label">Message</label>
+                                    <div class="col-lg-9">
+                                        <textarea class="form-control" rows="3" id="textArea" name="message"
+                                            style="margin: 0px 113.156px 0px 0px; width: 100%; height: 100px;"></textarea>
+                                        <span class="help-block">Message required</span>
+                                    </div>
+                                    <div class="col-lg-10 col-lg-offset-8 col-xs-offset-8">
+                                        <button type="submit" class="btn btn-info">Send</button>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        <% } %>
                     <% } %>
-                </fieldset>
-            </form>
-            <% } else { %>
-            <form class="form-horizontal" action="/user/roles/add" method="POST">
-                <fieldset>
-                    <label for="select" class="col-lg-3 control-label">Up to</label>
-                    <div class="col-lg-9">
-                        <select class="form-control" id="select" name="upgradeTo">
-                            <% if (!user.roles.includes('guest')) { %>
-                            <option>Guest</option>
-                            <% } %>
-                            <% if (!user.roles.includes('staff')) { %>
-                            <option>Staff</option>
-                            <% } %>
-                            <% if (!user.roles.includes('manager')) { %>
-                            <option>Manager</option>
-                            <% } %>
-                            <% if (!user.roles.includes('admin')) { %>
-                            <option>Admin</option>
-                            <% } %>
-                        </select>
-                    </div>
-                    <label for="textArea" class="col-lg-3 control-label">Message</label>
-                    <div class="col-lg-9">
-                        <textarea class="form-control" rows="3" id="textArea" name="message"
-                            style="margin: 0px 113.156px 0px 0px; width: 100%; height: 100px;"></textarea>
-                        <span class="help-block">Message required</span>
-                    </div>
-                    <div class="col-lg-10 col-lg-offset-8 col-xs-offset-8">
-                        <button type="submit" class="btn btn-info">Send</button>
-                    </div>
-                </fieldset>
-            </form>
-            <% } %>
-            <% } %>
-            <% } %>
-
-            <% if (option === 'delete') { %>
-            <% if (user.roles.length === 1) { %>
-            <label class="text-warning control-label">
-                You cannot access this feature
-            </label>
-            <% } else { %>
-            <form class="form-horizontal" action="/user/roles/delete" method="POST">
-                <fieldset>
-                    <label for="select" class="col-lg-3 control-label">Delete</label>
-                    <div class="col-lg-9">
-                        <select class="form-control" id="select" name="deleteRole">
-                            <% if (user.roles.includes('staff')) { %>
-                            <option>Staff</option>
-                            <% } %>
-                            <% if (user.roles.includes('manager')) { %>
-                            <option>Manager</option>
-                            <% } %>
-                            <% if (user.roles.includes('admin')) { %>
-                            <option>Admin</option>
-                            <% } %>
-                        </select>
-                    </div>
-                    <label for="inputPassword" class="col-lg-3 control-label">Password</label>
-                    <div class="col-lg-9">
-                        <input type="password" class="form-control" id="inputPassword" placeholder="Confirm password"
-                            name="password">
-                    </div>
-                    <div class="col-lg-10 col-lg-offset-8 col-xs-offset-8">
-                        <br>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </fieldset>
-            </form>
-            <% } %>
-            <% } %>
+                <% } %>
+                <% if (views.delete.active) { %>
+                    <form class="form-horizontal" action="/user/roles/delete" method="POST">
+                        <fieldset>
+                            <label for="select" class="col-lg-3 control-label">Delete</label>
+                            <div class="col-lg-9">
+                                <select class="form-control" id="select" name="request">
+                                    <% user.roles.map(role => { %>
+                                        <% if (role != 'guest') { %>
+                                            <option><%= role %></option>
+                                        <% } %>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <label for="inputPassword" class="col-lg-3 control-label">Password</label>
+                            <div class="col-lg-9">
+                                <input type="password" class="form-control" id="inputPassword" placeholder="Confirm password"
+                                    name="password">
+                            </div>
+                            <div class="col-lg-10 col-lg-offset-8 col-xs-offset-8">
+                                <br>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                <% } %>
+            </div>
         </div>
+
     </div>
 </div>
 <div class="col-lg-4">

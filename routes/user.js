@@ -27,7 +27,19 @@ router.route('/profile')
                 req.flash('error', 'Profile not found');
             }
             // render profile
-            res.render('profile', { title: 'Profile', user: req.user, profile });
+            res.render('profile', {
+                title: 'Profile',
+                user: req.user,
+                views: {
+                    fullName: profile.fullName,
+                    email: profile.email,
+                    birthday: profile.birthday.toISOString().split('T')[0],
+                    gender: {
+                        male: profile.gender === 'male' ? 'checked' : null,
+                        female: profile.gender === 'female' ? 'checked' : null
+                    }
+                }
+            });
         } catch (error) {
             console.error(error.message);
         }
@@ -55,7 +67,11 @@ router.route('/profile')
 
 router.route('/verify')
     .get(auth, (req, res) => {
-        res.render('verify', { title: 'Email verifier', user: req.user });
+        res.render('verify', {
+            title: 'Email verifier',
+            user: req.user,
+            views: {}
+        });
     })
     .post(auth, async (req, res) => {
         try {
@@ -84,10 +100,13 @@ router.route('/verify')
 
 router.route('/password')
     .get(auth, (req, res) => {
-        res.render('password', { title: 'Change Password', user: req.user });
+        res.render('password', {
+            title: 'Change Password',
+            user: req.user,
+            views: {}
+        });
     })
     .post(auth, valid.changePassword, async (req, res) => {
-
         // validation
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -168,123 +187,192 @@ router.route('/verify/otp')
 router.route('/roles')
     .get(auth, verify, async (req, res) => {
         try {
-            
+            const roles = await Role.find({ userId: { $ne: req.user.id }, status: 'pending' }).populate({
+                path: 'userId',
+                populate: {
+                    path: 'profileId'
+                }
+            });
+            const list = roles.filter(role => {
+                if (!req.user.roles.includes('admin')) {
+                    if (!role.request.includes('admin')) {
+                        return role;
+                    }
+                } else {
+                    return role;
+                }
+            });
+            const role = await Role.findOne({ userId: req.user.id });
+            // check permissions
+            const visible = (...roles) => {
+                let result = false;
+                roles.map(role => {
+                    result |= req.user.roles.includes(role);
+                })
+                return result;
+            }
+            // render view
+            res.render('roles', {
+                title: 'Roles',
+                user: req.user,
+                views: {
+                    requests: {
+                        active: !'add delete'.includes(req.query.option) && visible('manager', 'admin') ? 'active' : null,
+                        disable: visible('manager', 'admin') ? null : 'disabled',
+                        list
+                    },
+                    add: {
+                        active: req.query.option === 'add' || (!'add delete'.includes(req.query.option) && !visible('manager', 'admin')) || (req.query.option === 'delete' && !visible('staff', 'manager', 'admin')) ? 'active' : null,
+                        full: req.user.roles.length === 4,
+                        role
+                    },
+                    delete: {
+                        active: req.query.option === 'delete' && visible('staff', 'manager', 'admin') ? 'active' : null,
+                        disable: visible('staff', 'manager', 'admin') ? null : 'disabled'
+                    }
+                }
+            });
         } catch (error) {
             console.error(error.message);
         }
-        Role.find({})
-            .then(roles => {
-                Role.findOne({ userId: req.user.id })
-                    .then(roleReq => res.render('roles', {
-                        title: 'Roles',
-                        user: req.user,
-                        roleReq,
-                        option: !['list', 'add', 'delete'].includes(req.query.option) ? 'list' : req.query.option
-                    }))
-                    .catch(error => console.error(error.message));
-            })
-            .catch(error => console.error(error.message));
     })
-    .post()
+    .post(auth, verify, async (req, res) => {
+        try {
+            const role = await Role.findOneAndRemove({ userId: req.user.id });
+            // check result
+            if (role) {
+                res.redirect('back');
+            } else {
+                req.flash('error', 'Confirm failed');
+                res.redirect('back');
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    })
     .put()
     .delete()
 
 router.route('/roles/add')
     .get()
-    .post(auth, verify, valid.addRoles, (req, res) => {
-        const { upgradeTo, message } = req.body;
+    .post(auth, verify, valid.addRoles, async (req, res) => {
         // validation
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             req.flash('error', errors.array()[0].msg);
-            return res.redirect('/user/roles?option=add');
-        }
-        if (req.user.roles.includes(upgradeTo.toLowerCase())) {
-            req.flash('error', 'UpgradeTo does not match');
-            return res.redirect('/user/roles?option=add');
+            return res.redirect('back');
         }
 
-        Role.findOne({ userId: req.user.id })
-            .then(role => {
-                if (role) {
-                    req.flash('error', 'Request is pending ...');
-                    res.redirect('/user/roles?option=add');
-                } else {
-                    // new Role
-                    let newRole = new Role({
-                        userId: req.user.id,
-                        currentRoles: req.user.roles,
-                        upgradeTo,
-                        message
-                    })
-                    newRole.save()
-                        .then(result => {
-                            req.flash('success', 'Your request has been sent successfully');
-                            res.redirect('/user/roles?option=add');
-                        })
-                        .catch(error => console.error(error.message));
-                }
-            })
-            .catch(error => console.error(error.message));
+        const { request, message } = req.body;
+
+        try {
+            // check request
+            const user = await User.findOne({ _id: req.user.id, roles: request });
+            if (user) {
+                req.flash('error', 'Request error');
+                return res.redirect('back');
+            }
+            const role = await Role.findOne({ userId: req.user.id });
+            // check request exists
+            if (role) {
+                req.flash('error', 'Request is pending ...');
+                return res.redirect('back');
+            }
+            // new role
+            const newRole = await new Role({
+                userId: req.user.id,
+                request,
+                message
+            }).save();
+            // check newRole
+            if (newRole) {
+                req.flash('success', 'Your request has been sent successfully');
+                res.redirect('back');
+            } else {
+                req.flash('error', 'Add Roles failed');
+                res.redirect('back');
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
     })
     .put()
     .delete()
 
 router.route('/roles/delete')
     .get()
-    .post(auth, verify, valid.deleteRoles, (req, res) => {
-        const { deleteRole, password } = req.body;
+    .post(auth, verify, access('staff', 'manager', 'admin'), valid.deleteRoles, async (req, res) => {
         // validation
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             req.flash('error', errors.array()[0].msg);
-            return res.redirect('/user/roles?option=delete');
+            return res.redirect('back');
         }
 
-        if (deleteRole.toLowerCase() === 'guest') {
-            req.flash('error', 'Access denied');
-            return res.redirect('/user/roles?option=delete');
-        }
+        const { request, password } = req.body;
 
-        User.findById(req.user.id)
-            .then(user => {
-                if (user) {
-                    // compare password
-                    bcrypt.compare(password, user.password, (err, isMatch) => {
-                        if (err) {
-                            return console.error(err.message);
-                        }
-                        if (isMatch) {
-                            user.roles.pull(deleteRole);
-                            user.save()
-                                .then(user => {
-                                    req.flash('success', `Delete ${deleteRole} successful`);
-                                    res.redirect('/user/roles?option=delete');
-                                })
-                                .catch(error => console.error(error.message));
-                        } else {
-                            req.flash('error', 'Password incorrect');
-                            res.redirect('/user/roles?option=delete');
-                        }
-                    })
-                } else {
-                    req.flash('error', 'User not found');
-                    res.redirect('/login');
-                }
-            })
-            .catch(error => console.error(error.message));
+        try {
+            const user = await User.findById(req.user.id);
+            if (!user) {
+                req.flash('error', 'User not found');
+                return res.redirect('back');
+            }
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                req.flash('error', 'Password incorrect');
+                return res.redirect('back');
+            }
+            await user.roles.pull(request);
+            const result = await user.save();
+            if (result) {
+                req.flash('success', `Delete ${request} successful`);
+                res.redirect('back');
+            } else {
+                req.flash('success', `Delete ${request} failed`);
+                res.redirect('back');
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
     })
     .put()
     .delete()
 
-router.route('/roles/confirm')
+router.route('/roles/:id')
     .get()
-    .post(auth, verify, (req, res) => {
-        Role.findOneAndRemove({ userId: req.user.id })
-            .then(res.redirect('/user/roles'))
-            .catch(error => console.error(error.message));
+    .post(auth, verify, access('manager', 'admin'), async (req, res) => {
+        try {
+            const role = await Role.findOne({ _id: req.params.id, userId: { $ne: req.user.id } });
+            if (!role) {
+                return res.redirect('back');
+            }
+            if (!req.user.roles.includes('admin')) {
+                if (!role.request.includes('admin')) {
+                    role.status = req.body.response;
+                }
+            } else {
+                role.status = req.body.response;
+            }
+            const result = await role.save();
+            if (!result) {
+                req.flash('error', 'Response does not match');
+                return res.redirect('back');
+            }
+            if (role.status === 'accepted') {
+                const user = await User.findByIdAndUpdate(role.userId, { $push: { roles: role.request } });
+                if (!user) {
+                    req.flash('error', 'User not found');
+                    return res.redirect('back');
+                }
+            }
+            req.flash('success', 'Confirm successful');
+            res.redirect('back');
+        } catch (error) {
+            console.error(error.message);
+        }
     })
     .put()
     .delete()
+
 
 module.exports = router;

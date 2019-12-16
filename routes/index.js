@@ -21,7 +21,11 @@ const verify = require('../middleware/verify');
 
 router.route('/')
     .get(auth, verify, (req, res) => {
-        res.render('page', { user: req.user });
+        res.render('page', {
+            title: 'Store manager',
+            user: req.user,
+            views: {}
+        });
     })
     .post()
     .put()
@@ -29,7 +33,11 @@ router.route('/')
 
 router.route('/login')
     .get((req, res) => {
-        res.render('login', { title: 'Login' });
+        res.render('login', { 
+            title: 'Login',
+            user: null,
+            view: {}
+        });
     })
     .post(passport.authenticate('login', {
         successRedirect: '/',
@@ -50,7 +58,11 @@ router.route('/logout')
 
 router.route('/register')
     .get((req, res) => {
-        res.render('register', { title: 'Register' });
+        res.render('register', { 
+            title: 'Register',
+            user: null,
+            view: {}
+        });
     })
     .post(valid.register, passport.authenticate('register', {
         successRedirect: '/',
@@ -62,10 +74,13 @@ router.route('/register')
 
 router.route('/password_reset')
     .get((req, res) => {
-        res.render('reset_password', { title: 'Reset Password' });
+        res.render('reset_password', { 
+            title: 'Reset Password',
+            user: null,
+            view: {}
+        });
     })
     .post(valid.resetPassword, async (req, res) => {
-
         // validation
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -152,8 +167,10 @@ router.route('*')
         res.status(404).render('error', {
             title: 'Error',
             user: req.user,
-            statusCode: 404,
-            message: `Sorry, This page isn't available`
+            views: {
+                statusCode: 404,
+                message: `Sorry, This page isn't available`
+            }
         });
     })
     .post()

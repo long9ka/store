@@ -7,20 +7,20 @@
                 <label for="inputFullName" class="col-lg-4 control-label">Full Name</label>
                 <div class="col-lg-8">
                     <input type="text" class="form-control" id="inputFullName" placeholder="Full name" name="fullName"
-                        value="<%= profile.fullName %>">
+                        value="<%= views.fullName %>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputEmail" class="col-lg-4 control-label">Email</label>
                 <div class="col-lg-8">
                     <input type="text" class="form-control" id="inputEmail" placeholder="Email"
-                        value="<%= profile.email %>" disabled>
+                        value="<%= views.email %>" disabled>
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputRole" class="col-lg-4 control-label">Roles</label>
                 <div class="col-lg-8">
-                    <% user.roles.forEach(role => { %>
+                    <% user.roles.map(role => { %>
                     <%- include('partials/color', { role }) %>
                     <span class="label label-<%= color %>"><%= role %></span>
                     <% }) %>
@@ -36,7 +36,7 @@
                 <label for="inputBirthday" class="col-lg-4 control-label">Birthday</label>
                 <div class="col-lg-8">
                     <input type="date" class="form-control" id="inputBirthday" name="birthday"
-                        value="<%= profile.birthday.toISOString().split('T')[0] %>">
+                        value="<%= views.birthday %>">
                 </div>
             </div>
             <div class="form-group">
@@ -44,21 +44,15 @@
                 <div class="col-lg-8">
                     <div class="radio">
                         <label>
-                            <% if (locals.profile.gender == "male") { %>
-                            <input type="radio" name="gender" id="optionsRadios1" value="Male" checked>
-                            <% } else { %>
-                            <input type="radio" name="gender" id="optionsRadios1" value="Male">
-                            <% } %>
+                            <input type="radio" name="gender" id="optionsRadios1" value="male"
+                                <%=  views.gender.male %>>
                             Male
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <% if (locals.profile.gender == "female") { %>
-                            <input type="radio" name="gender" id="optionsRadios2" value="Female" checked>
-                            <% } else { %>
-                            <input type="radio" name="gender" id="optionsRadios2" value="Female">
-                            <% } %>
+                            <input type="radio" name="gender" id="optionsRadios2" value="female"
+                                <%=  views.gender.female %>>
                             Female
                         </label>
                     </div>

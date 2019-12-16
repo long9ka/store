@@ -4,7 +4,8 @@ router.route('/')
     .get((req, res) => {
         res.render('terms', { 
             title: 'Terms of service',
-            user: req.user
+            user: req.user,
+            views: {}
         });
     })
     .post()

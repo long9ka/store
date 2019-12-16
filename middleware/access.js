@@ -8,7 +8,9 @@ module.exports = (...roles) => (req, res, next) => {
     res.status(401).render('error', {
         title: 'Error',
         user: req.user,
-        statusCode: 401,
-        message: 'Access to feature blocked'
+        views: {
+            statusCode: 401,
+            message: 'Access to feature blocked'
+        }
     });
 }
