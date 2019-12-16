@@ -342,7 +342,7 @@ router.route('/roles/:id')
     .get()
     .post(auth, verify, access('manager', 'admin'), async (req, res) => {
         try {
-            const role = await Role.findOne({ _id: req.params.id, userId: { $ne: req.user.id } });
+            const role = await Role.findOne({ _id: req.params.id, userId: { $ne: req.user.id }, status: 'pending' });
             if (!role) {
                 return res.redirect('back');
             }
