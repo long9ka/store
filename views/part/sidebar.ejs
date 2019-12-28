@@ -15,7 +15,7 @@
                 <div class="fa fa-user" style="font-size:48px;"></div>
             </div>
             <div class="user-info">
-                <span class="user-name"><strong><a href="/user/profile"><%= profile.fullName %></a></strong>
+                <span class="user-name"><strong><a href="user/profile"><%= profile.fullName %></a></strong>
                 </span>
                 <span class="user-role"><% if (user.roles.includes('admin')) { %>
                     <strong class="text-danger">Admin</strong>
@@ -52,70 +52,44 @@
                     <span>General</span>
                 </li>
                 <li class="sidebar-dropdown">
-                    <a href="#">
+                    <a href="user/profile">
                         <i class="fa fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                        <span class="badge badge-pill badge-warning">New</span>
+                        <span>Thông tin</span>
+                        <span class="badge badge-pill badge-warning">Hello</span>
                     </a>
-                    <div class="sidebar-submenu">
-                        <ul>
-                            <li>
-                                <a href="#">Dashboard 1
-                                    <span class="badge badge-pill badge-success">Pro</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">Dashboard 2</a>
-                            </li>
-                            <li>
-                                <a href="#">Dashboard 3</a>
-                            </li>
-                        </ul>
-                    </div>
+                    
                 </li>
                 <li class="sidebar-dropdown">
                     <a href="#">
-                        <i class="fa fa-shopping-cart"></i>
-                        <span>E-commerce</span>
+                        <i class="fa fa-user"></i>
+                        <span>Nhân Sự</span>
                         <span class="badge badge-pill badge-danger">3</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="#">Products
+                                <a href="/admin/manager">Quản lý
 
                                 </a>
                             </li>
                             <li>
-                                <a href="#">Orders</a>
-                            </li>
-                            <li>
-                                <a href="#">Credit cart</a>
+                                <a href="#">Nhân viên cửa hàng</a>    
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li class="sidebar-dropdown">
                     <a href="#">
-                        <i class="far fa-gem"></i>
-                        <span>Components</span>
+                        <i class="fas fa-store"></i>
+                        <span>Cửa hàng</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="#">General</a>
+                                <a href="#">Chi nhánh chính</a>
                             </li>
                             <li>
-                                <a href="#">Panels</a>
-                            </li>
-                            <li>
-                                <a href="#">Tables</a>
-                            </li>
-                            <li>
-                                <a href="#">Icons</a>
-                            </li>
-                            <li>
-                                <a href="#">Forms</a>
+                                <a href="#">Danh sách chi nhánh phụ</a>
                             </li>
                         </ul>
                     </div>
@@ -123,21 +97,27 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="fa fa-chart-line"></i>
-                        <span>Charts</span>
+                        <span>Biểu đồ doanh số</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="#">Pie chart</a>
+                                <a href="#">Doanh số tổng quan</a>
                             </li>
                             <li>
-                                <a href="#">Line chart</a>
+                                <a href="#">Doanh số theo chi nhánh</a>
                             </li>
                             <li>
-                                <a href="#">Bar chart</a>
+                                <a href="#">Doanh số theo tuần</a>
                             </li>
                             <li>
-                                <a href="#">Histogram</a>
+                                <a href="#">Doanh số theo quý</a>
+                            </li>
+                            <li>
+                                <a href="#">Doanh số theo tháng</a>
+                            </li>
+                            <li>
+                                <a href="#">Doanh số theo năm</a>
                             </li>
                         </ul>
                     </div>
@@ -145,7 +125,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="fa fa-globe"></i>
-                        <span>Maps</span>
+                        <span>Sản phẩm</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>

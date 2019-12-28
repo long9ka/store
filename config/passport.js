@@ -3,8 +3,11 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/User');
 const Profile = require('../models/Profile');
+const Permission = require('../models/Permission');
 
-const { validationResult } = require('express-validator');
+const {
+    validationResult
+} = require('express-validator');
 
 module.exports = (passport) => {
     passport.serializeUser((user, done) => {
@@ -18,17 +21,20 @@ module.exports = (passport) => {
     });
 
     // passport login
-    passport.use('login', new LocalStrategy(
-        {
+    passport.use('login', new LocalStrategy({
             usernameField: 'username',
             passwordField: 'password',
             passReqToCallback: true
         },
         (req, username, password, done) => {
-            User.findOne({ username })
+            User.findOne({
+                    username
+                })
                 .then(user => {
                     if (!user) {
-                        return done(null, false, { message: 'Username not registered' });
+                        return done(null, false, {
+                            message: 'Username not registered'
+                        });
                     }
                     bcrypt.compare(password, user.password, (err, isMatch) => {
                         if (err) {
@@ -37,7 +43,9 @@ module.exports = (passport) => {
                         if (isMatch) {
                             done(null, user);
                         } else {
-                            done(null, false, { message: 'Password incorrect' });
+                            done(null, false, {
+                                message: 'Password incorrect'
+                            });
                         }
                     })
                 })
@@ -45,8 +53,7 @@ module.exports = (passport) => {
     ))
 
     // passport register
-    passport.use('register', new LocalStrategy(
-        {
+    passport.use('register', new LocalStrategy({
             usernameField: 'username',
             passwordField: 'password',
             passReqToCallback: true
@@ -55,19 +62,34 @@ module.exports = (passport) => {
             // input valid
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return done(null, false, { message: errors.array()[0].msg });
+                return done(null, false, {
+                    message: errors.array()[0].msg
+                });
             }
 
-            const { email, fullName, birthday, gender } = req.body;
-            User.findOne({ username })
+            const {
+                email,
+                fullName,
+                birthday,
+                gender
+            } = req.body;
+            User.findOne({
+                    username
+                })
                 .then(user => {
                     if (user) {
-                        return done(null, false, { message: 'Username already exists' });
+                        return done(null, false, {
+                            message: 'Username already exists'
+                        });
                     }
-                    Profile.findOne({ email })
+                    Profile.findOne({
+                            email
+                        })
                         .then(profile => {
                             if (profile) {
-                                return done(null, false, { message: 'Email already exists' });
+                                return done(null, false, {
+                                    message: 'Email already exists'
+                                });
                             }
                             // new Profile
                             const newProfile = new Profile({
@@ -87,6 +109,13 @@ module.exports = (passport) => {
                                 profileId: newProfile.id,
                                 roles: ['guest']
                             })
+                            let newPermission = new Permission({
+                                permission: 'guest',
+                                profileId: newProfile.id
+                            })
+                            newPermission.save()
+                                .then()
+                                .catch(error => console.error(error.message))
                             // bcrypt
                             bcrypt.genSalt(10, (err, salt) => {
                                 bcrypt.hash(newUser.password, salt, (err, hash) => {
