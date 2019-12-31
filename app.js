@@ -59,5 +59,6 @@ app.use('/admin/manager',require('./routes/admin/manager'));
 app.use('/user', require('./routes/user'));
 app.use('/terms', require('./routes/terms'));
 app.use('/', require('./routes/index'));
+app.use('/product', require('./routes/product'));
 
 app.listen(config.PORT, console.log(`Server started on port ${config.PORT}`));
