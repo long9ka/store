@@ -11,87 +11,46 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>
-        <%= title %>
+        <%= locals.title || 'Store manager' %>
     </title>
     <!--Import Bootswatch paper-->
-    <link rel="stylesheet" href="https://bootswatch.com/3/paper/bootstrap.min.css">
+
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/03a3640dee.js" crossorigin="anonymous"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../stylesheets/sidebar.css">
+
 </head>
 
 <body>
-    <!--Navbar-->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="/">Store Manager</a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li> <a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                aria-expanded="false">More<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Submit CV</a></li>
-                                <li class="divider"></li>
-                                <li><a href="https://github.com/long9ka" target="blank">Contact</a></li>
-                                <li class="divider"></li>
-                                <li><a href="/terms">Terms of service</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <% if (user) { %>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                aria-expanded="false">
-                                <strong class="text-<%= color %>"><%= user.username %></strong>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="/user/profile">Profile</a></li>
-                                <li>
-                                    <a href="/user/roles">
-                                        Roles
-                                        <% if (!user.isVerified) { %>
-                                        &nbsp;
-                                        <span class="label label-danger">Verify your email</span>
-                                        <% } %>
-                                    </a>
-                                </li>
-                                <li><a href="/user/password">Change password</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/logout">Logout</a></li>
-                    </ul>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-
-    </nav>
 
     <!--Body-->
-    <div class="container page-header">
-        <br>
-        <br>
-        <%- body %>
-    </div>
+    <div class="page-wrapper chiller-theme toggled">
+        <% if (locals.user) { %> <%- include('./part/sidebar') %>
 
-    <!--Import bootstrap js-->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <div class="page-wrapper chiller-theme toggled">
+            <main class="page-content">
+                <div class="container-full-fluid">
+                    <%-body%>
+                </div>
+            </main>
+        </div>
+        <% } else { %> <%- include('./part/navbar') %>
+        <div class="container page-header">
+            <br>
+            <br>
+            <%- body %>
+        </div>
+        <% } %>
 
+
+
+        <!--Import bootstrap js-->
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="../javascripts/sidebar.js"></script>
 </body>
 
 </html>

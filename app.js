@@ -55,6 +55,7 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/admin/manager',require('./routes/admin/manager'));
 app.use('/user', require('./routes/user'));
 app.use('/terms', require('./routes/terms'));
 app.use('/', require('./routes/index'));

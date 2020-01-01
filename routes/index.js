@@ -15,17 +15,16 @@ const Profile = require('../models/Profile');
 const Otp = require('../models/Otp');
 
 // middleware
-const auth = require('../middleware/auth');
+const checkAuth = require('../middleware/auth');
 const valid = require('../middleware/valid');
 const verify = require('../middleware/verify');
-
 router.route('/')
-    .get(auth, verify, (req, res) => {
-        res.render('page', {
-            title: 'Store manager',
-            user: req.user,
-            views: {}
-        });
+    .get(checkAuth, verify, (req, res) => {
+        Profile.findById(req.user.profileId)
+        .then(profile=>{
+            res.render('page', { user: req.user, profile});
+        })
+       
     })
     .post()
     .put()
