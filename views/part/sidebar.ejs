@@ -15,17 +15,10 @@
                 <div class="fa fa-user" style="font-size:48px;"></div>
             </div>
             <div class="user-info">
-                <span class="user-name"><strong><a href="user/profile"><%= profile.fullName %></a></strong>
+                <span class="user-name">
+                    <strong><a href="user/profile"><%= user.profile.name %></a></strong>
                 </span>
-                <span class="user-role"><% if (user.roles.includes('admin')) { %>
-                    <strong class="text-danger">Admin</strong>
-                    <% } else if (user.roles.includes('manager')) { %>
-                    <strong class="text-primary">Manager</strong>
-                    <% } else if (user.roles.includes('staff')) { %>
-                    <strong class="text-success">Staff</strong>
-                    <% } else if (user.roles.includes('guest')) { %>
-                    <strong>Guest</strong>
-                    <% } %></span>
+                <strong><%= user.role %></strong>
                 <span class="user-status">
                     <i class="fa fa-circle"></i>
                     <span>Online</span>
@@ -57,7 +50,7 @@
                         <span>Thông tin</span>
                         <span class="badge badge-pill badge-warning">Hello</span>
                     </a>
-                    
+
                 </li>
                 <li class="sidebar-dropdown">
                     <a href="#">
@@ -73,7 +66,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#">Nhân viên cửa hàng</a>    
+                                <a href="#">Nhân viên cửa hàng</a>
                             </li>
                         </ul>
                     </div>
@@ -178,7 +171,7 @@
             <i class="fa fa-cog"></i>
             <span class="badge-sonar"></span>
         </a>
-        <a href="/logout" class="pt-2">
+        <a href="/user/logout" class="pt-2">
             <i class="fa fa-power-off"></i>
         </a>
     </div>

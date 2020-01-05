@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const passport = require('passport');
 const session = require('express-session');
+
 const app = express();
 
 // view engine
@@ -40,7 +41,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        maxAge: 1000*3600*24
+        maxAge: 1000 * 3600 * 24
     }
 }))
 
@@ -55,9 +56,8 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/admin/manager',require('./routes/admin/manager'));
+// routes
 app.use('/user', require('./routes/user'));
-app.use('/terms', require('./routes/terms'));
 app.use('/', require('./routes/index'));
 
 app.listen(config.PORT, console.log(`Server started on port ${config.PORT}`));

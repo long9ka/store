@@ -15,8 +15,8 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li> <a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
+                    <li> <a href="/user/login">Login</a></li>
+                    <li><a href="/user/register">Register</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                             aria-expanded="false">More<span class="caret"></span></a>
@@ -34,13 +34,13 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <!--Check roles-->
-                            <% if (user.roles.includes('admin')) { %>
+                            <% if (user.role.includes('admin')) { %>
                             <strong class="text-danger"><%= user.username %></strong>
-                            <% } else if (user.roles.includes('manager')) { %>
+                            <% } else if (user.role.includes('manager')) { %>
                             <strong class="text-primary"><%= user.username %></strong>
-                            <% } else if (user.roles.includes('staff')) { %>
+                            <% } else if (user.role.includes('staff')) { %>
                             <strong class="text-success"><%= user.username %></strong>
-                            <% } else if (user.roles.includes('guest')) { %>
+                            <% } else if (user.role.includes('guest')) { %>
                             <strong><%= user.username %></strong>
                             <% } %>
                             <span class="caret"></span>
@@ -56,10 +56,10 @@
                                     <% } %>
                                 </a>
                             </li>
-                            <li><a href="/user/password">Change password</a></li>
+                            <li><a href="/user/password/change">Change password</a></li>
                         </ul>
                     </li>
-                    <li><a href="/logout">Logout</a></li>
+                    <li><a href="/user/logout">Logout</a></li>
                 </ul>
                 <% } %>
             </div>

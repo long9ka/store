@@ -15,17 +15,37 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    profileId: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'profile'
+    role: {
+        type: String,
+        lowercase: true,
+        enum: ['guest', 'staff', 'manager', 'admin'],
+        default: 'guest'
     },
-    roles: [
-        {
+    profile: {
+        name: {
+            type: String,
+            trim: true,
+            required: true
+        },
+        email: {
+            type: String,
+            unique: true,
+            trim: true,
+            lowercase: true,
+            required: true
+        },
+        birthday: {
+            type: Date,
+            required: true
+        },
+        gender: {
             type: String,
             lowercase: true,
-            enum: ['guest', 'staff', 'manager', 'admin']
+            trim: true,
+            enum: ['male', 'female'],
+            required: true
         }
-    ]
+    }
 })
 
 module.exports = mongoose.model('user', UserSchema);

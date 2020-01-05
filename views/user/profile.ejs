@@ -1,0 +1,83 @@
+<div class="col-lg-4"></div>
+<div class="col-lg-4">
+    <form class="form-horizontal" action="/user/profile" method="post">
+        <fieldset>
+            <legend>My Profile</legend>
+            <div class="form-group">
+                <label for="inputName" class="col-lg-4 control-label">Full Name</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" id="inputName" placeholder="Full name" name="name"
+                        value="<%= user.profile.name %>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="col-lg-4 control-label">Email</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Email"
+                        value="<%= user.profile.email %>" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputRole" class="col-lg-4 control-label">Role</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" id="inputRole" placeholder="Role" value="<%= user.role %>"
+                        disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputBirthday" class="col-lg-4 control-label">Birthday</label>
+                <div class="col-lg-8">
+                    <input type="date" class="form-control" id="inputBirthday" name="birthday"
+                        value="<%= user.profile.birthday.toISOString().split('T')[0] %>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 control-label">Gender</label>
+                <div class="col-lg-8">
+                    <div class="radio">
+                        <label>
+                            <% if (user.profile.gender === 'male') { %>
+                            <input type="radio" name="gender" id="optionsRadios1" value="male" checked>
+                            <% } else { %>
+                            <input type="radio" name="gender" id="optionsRadios1" value="male">
+                            <% } %>
+                            Male
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <% if (user.profile.gender === 'male') { %>
+                            <input type="radio" name="gender" id="optionsRadios2" value="female">
+                            <% } else { %>
+                            <input type="radio" name="gender" id="optionsRadios2" value="female" checked>
+                            <% } %>
+                            Female
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-8 col-lg-offset-8">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="/" class="btn btn-default">Cancel</a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<div class="col-lg-4">
+    <% if (success != '') { %>
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong><%= success %></strong>
+    </div>
+    <% } %>
+    <% if (error != '') { %>
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>
+            <%= error %>
+        </strong>
+    </div>
+    <% } %>
+</div>

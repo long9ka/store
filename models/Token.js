@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const OtpSchema = new mongoose.Schema({
+const TokenSchema = new mongoose.Schema({
     userId: {
         type: mongoose.SchemaTypes.ObjectId,
         required: true,
         ref: 'user'
     },
-    token: {
+    payload: {
         type: Number,
         required: true
     },
@@ -17,4 +17,4 @@ const OtpSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('otp', OtpSchema);
+module.exports = mongoose.model('token', TokenSchema);

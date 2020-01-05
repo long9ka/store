@@ -1,56 +1,32 @@
-<!--Include ejs-->
-<% if (locals.user) { %>
-<%- include('partials/color', { role: locals.user.roles }) %>
-<% } %>
-
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <title>
         <%= locals.title || 'Store manager' %>
     </title>
     <!--Import Bootswatch paper-->
-
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/03a3640dee.js" crossorigin="anonymous"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../stylesheets/sidebar.css">
 
 </head>
 
 <body>
-
     <!--Body-->
-    <div class="page-wrapper chiller-theme toggled">
-        <% if (locals.user) { %> <%- include('./part/sidebar') %>
-
-        <div class="page-wrapper chiller-theme toggled">
-            <main class="page-content">
-                <div class="container-full-fluid">
-                    <%-body%>
-                </div>
-            </main>
-        </div>
-        <% } else { %> <%- include('./part/navbar') %>
-        <div class="container page-header">
-            <br>
-            <br>
-            <%- body %>
-        </div>
-        <% } %>
-
-
-
-        <!--Import bootstrap js-->
-        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script src="../javascripts/sidebar.js"></script>
+    <%- include('./part/navbar') %>
+    <div class="container page-header">
+        <%- body %>
+    </div>
+    <!--Import bootstrap js-->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="../javascripts/sidebar.js"></script>
 </body>
 
 </html>

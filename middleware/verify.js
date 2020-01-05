@@ -1,6 +1,1 @@
-module.exports = (req, res, next) => {
-    if (req.user.isVerified) {
-        return next();
-    }
-    res.redirect('/user/verify');
-}
+module.exports = (req, res, next) => req.user.isVerified ? next() : res.redirect('/user/email/verify');

@@ -1,6 +1,6 @@
-const router = require('express').Router();
+const express = require('express');
+const passport = require('passport');
 const bcrypt = require('bcryptjs');
-const { validationResult } = require('express-validator');
 
 // config
 const transporter = require('../config/transporter');
@@ -9,139 +9,199 @@ const token = require('../config/token-generator');
 
 // models
 const User = require('../models/User');
-const Profile = require('../models/Profile');
-const Otp = require('../models/Otp');
+const Token = require('../models/Token');
 const Role = require('../models/Role');
 
 // middleware
 const auth = require('../middleware/auth');
+const access = require('../middleware/access');
 const verify = require('../middleware/verify');
 const valid = require('../middleware/valid');
-const access = require('../middleware/access');
+
+const router = express();
+
+router.route('/register')
+    .get((req, res) => res.render('user/register', { title: 'Register' }))
+    .post(
+        valid('username', 'password', 'email', 'name', 'birthday', 'gender'),
+        passport.authenticate('register', {
+            successRedirect: '/',
+            failureRedirect: '/user/register',
+            failureFlash: true
+        })
+    )
+
+router.route('/login')
+    .get((req, res) => res.render('user/login', { title: 'Login' }))
+    .post(
+        passport.authenticate('login', {
+            successRedirect: '/',
+            failureRedirect: '/user/login',
+            failureFlash: true
+        })
+    )
+
+router.route('/logout')
+    .get((req, res) => {
+        req.logout();
+        res.redirect('/user/login');
+    })
+    .post()
 
 router.route('/profile')
-    .get(auth, async (req, res) => {
+    .get(auth, (req, res) => {
+        res.render('user/profile', {
+            title: 'Profile',
+            user: req.user
+        });
+    })
+    .post(auth, valid('name', 'birthday', 'gender'), async (req, res) => {
+        const { name, birthday, gender } = req.body;
         try {
-            const profile = await Profile.findById(req.user.profileId);
-            if (!profile) {
-                req.flash('error', 'Profile not found');
-            }
-            // render profile
-            res.render('profile', {
-                title: 'Profile',
-                user: req.user,
-                views: {
-                    fullName: profile.fullName,
-                    email: profile.email,
-                    birthday: profile.birthday.toISOString().split('T')[0],
-                    gender: {
-                        male: profile.gender === 'male' ? 'checked' : null,
-                        female: profile.gender === 'female' ? 'checked' : null
-                    }
+            await User.findByIdAndUpdate(req.user.id, {
+                profile: {
+                    name,
+                    email: req.user.profile.email,
+                    birthday,
+                    gender
                 }
-            });
+            })
+            req.flash('success', 'Update profile successful');
+            res.redirect('back');
         } catch (error) {
             console.error(error.message);
         }
     })
-    .post(auth, valid.updateProfile, async (req, res) => {
-        // validation
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            req.flash('error', errors.array()[0].msg);
-            return res.redirect('back');
+
+router.route('/email/verify')
+    .get(auth, (req, res) => res.render('user/verify_email', { title: 'Email verifier', user: req.user }))
+    .post(auth, async (req, res) => {
+        try {
+            const token = await Token.findOneAndRemove({
+                userId: req.user.id,
+                payload: req.body.code
+            });
+            if (!token) {
+                req.flash('error', 'Code incorrect');
+                return res.redirect('back');
+            }
+            await User.findByIdAndUpdate(req.user.id, { isVerified: true });
+            res.redirect('/');
+        } catch (error) {
+            console.error(error.message);
         }
+    })
+
+router.route('/email/verify/code')
+    .get()
+    .post(auth, async (req, res) => {
+        try {
+            // create new token
+            const code = await new Token({
+                userId: req.user.id,
+                payload: token(1e5, 1e6 - 1)
+            }).save();
+            // send email
+            await transporter.sendMail({
+                from: `"Store Manager" <${config.EMAIL_USER}>`,
+                to: req.user.profile.email,
+                subject: 'User verification',
+                html: `
+                    <h1>Hello ${req.user.profile.name}</h1>
+                    <br>
+                    Here is the Otp code you need to verify account: <h1 style="color:blue">${code.payload.toString()}</h1>
+                    <section>Visit Store manager <a href="storei.herokuapp.com">here</a></section>
+                `
+            });
+            req.flash('success', 'Send email successful');
+            res.redirect('back');
+        } catch (error) {
+            console.error(error.message);
+        }
+    })
+
+router.route('/password/reset')
+    .get((req, res) => res.render('user/reset_password', { title: 'Reset Password' }))
+    .post(valid('code', 'password', 'confirmPassword'), async (req, res) => {
+
+        const { code, password } = req.body;
 
         try {
-            const profile = await Profile.findByIdAndUpdate(req.user.profileId, req.body);
-            if (profile) {
-                req.flash('success', 'Update Profile successful');
+            const token = await Token.findOneAndRemove({ payload: code }).populate('userId');
+            if (!token) {
+                req.flash('error', 'Code incorrect');
+                return res.redirect('back');
+            }
+            // hash new password
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(password, salt);
+            const user = await User.findByIdAndUpdate(token.userId, {
+                isVerified: true,
+                password: hashPassword
+            });
+            if (user) {
+                req.flash('success', 'Reset password successful, please Login');
+                res.redirect('/user/login');
+            } else {
+                req.flash('error', 'User not found');
                 res.redirect('back');
             }
         } catch (error) {
             console.error(error.message);
         }
     })
-    .put()
-    .delete()
 
-router.route('/verify')
-    .get(auth, (req, res) => {
-        res.render('verify', {
-            title: 'Email verifier',
-            user: req.user,
-            views: {}
-        });
-    })
-    .post(auth, async (req, res) => {
+router.route('/password/reset/code')
+    .get()
+    .post(async (req, res) => {
         try {
-            const otp = await Otp.findOneAndRemove({
-                userId: req.user.id,
-                token: req.body.otp
+            const user = await User.findOne({ 'profile.email': req.body.email });
+            if (!user) {
+                req.flash('error', 'Email not found');
+                return res.redirect('back');
+            }
+            // new token
+            const code = await new Token({
+                userId: user.id,
+                payload: token(1e5, 1e6 - 1)
+            }).save();
+            // send email
+            await transporter.sendMail({
+                from: `"Store Manager" <${config.EMAIL_USER}>`,
+                to: user.profile.email,
+                subject: 'Forgot password',
+                html: `
+                    <h1>Hello ${user.profile.name}</h1>
+                    <br>
+                    Here is the Otp code you need to confirm: <h1 style="color:blue">${code.payload.toString()}</h1>
+                    <section>Visit Store manager <a href="storei.herokuapp.com">here</a></section>
+                `
             });
-            // check otp exists
-            if (!otp) {
-                req.flash('error', 'Otp incorrect');
-                return res.redirect('back');
-            }
-            const user = await User.findByIdAndUpdate(req.user.id, { isVerified: true });
-            if (user) {
-                res.redirect('/');
-            } else {
-                req.flash('error', 'User incorrect');
-                return res.redirect('back');
-            }
+            req.flash('success', 'Send email successful');
+            res.redirect('back');
         } catch (error) {
             console.error(error.message);
         }
     })
-    .put()
-    .delete()
 
-router.route('/password')
-    .get(auth, (req, res) => {
-        res.render('password', {
-            title: 'Change Password',
-            user: req.user,
-            views: {}
-        });
-    })
-    .post(auth, valid.changePassword, async (req, res) => {
-        // validation
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            req.flash('error', errors.array()[0].msg);
-            return res.redirect('back');
-        }
 
-        const { password, newPassword, confirmPassword } = req.body;
-
+router.route('/password/change')
+    .get(auth, (req, res) => res.render('user/change_password', { title: 'Change Password', user: req.user }))
+    .post(auth, valid('newPassword', 'confirmNewPassword'), async (req, res) => {
+        const { password, newPassword } = req.body;
         try {
-            const user = await User.findById(req.user.id);
-            // check user exists
-            if (!user) {
-                req.flash('error', 'User not found');
-                return res.redirect('back');
-            }
-            const isMatch = await bcrypt.compare(password, user.password);
-            // check password is match
+            const isMatch = await bcrypt.compare(password, req.user.password);
             if (!isMatch) {
                 req.flash('error', 'Password does not match');
                 return res.redirect('back');
             }
             // password encoding
             const salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(newPassword, salt);
+            const hashPassword = await bcrypt.hash(newPassword, salt);
             // change password
-            user.password = hash;
-            const result = await user.save();
-            if (result) {
-                req.flash('success', 'Change password successful');
-                res.redirect('back');
-            } else {
-                req.flash('error', 'Can not change password');
-                res.redirect('back');
-            }
+            await User.findByIdAndUpdate(req.user.id, { password: hashPassword });
+            req.flash('success', 'Change password successful');
+            res.redirect('back');
         } catch (error) {
             console.error(error.message);
         }
@@ -149,6 +209,7 @@ router.route('/password')
     .put()
     .delete()
 
+    /*
 router.route('/verify/otp')
     .get()
     .post(auth, async (req, res) => {
@@ -169,11 +230,11 @@ router.route('/verify/otp')
                 to: profile.email,
                 subject: 'User verification',
                 html: `
-                    <h1>Hello ${profile.fullName}</h1>
-                    <br>
-                    Here is the Otp code you need to verify account: <h1 style="color:blue">${code.token.toString()}</h1>
-                    <section>Visit Store manager <a href="storei.herokuapp.com">here</a></section>
-                `
+                <h1>Hello ${profile.fullName}</h1>
+                <br>
+                Here is the Otp code you need to verify account: <h1 style="color:blue">${code.token.toString()}</h1>
+                <section>Visit Store manager <a href="storei.herokuapp.com">here</a></section>
+            `
             });
             req.flash('success', 'Send email successful');
             res.redirect('back');
@@ -373,6 +434,5 @@ router.route('/roles/:id')
     })
     .put()
     .delete()
-
-
+    */
 module.exports = router;
