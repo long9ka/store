@@ -57,7 +57,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // routes
+app.use('/product', require('./routes/product'));
 app.use('/user', require('./routes/user'));
 app.use('/', require('./routes/index'));
+
 
 app.listen(config.PORT, console.log(`Server started on port ${config.PORT}`));

@@ -1,0 +1,58 @@
+<div class="col-lg-4"></div>
+<div class="col-lg-4">
+    <form class="form-horizontal" action="./add" method="post">
+        <legend>Add Product</legend>
+        <div class="form-group">
+            <label for="inputProductCode" class="col-lg-4 control-label">Code</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" id="inputProductCode" placeholder="Product Code" name="code">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputProductName" class="col-lg-4 control-label">Name</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" id="inputProductName" placeholder="Product Name" name="name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputProductPrice" class="col-lg-4 control-label">Price</label>
+            <div class="col-lg-8">
+                <input type="number" class="form-control" id="inputProductPrice" placeholder="Product Price" name="price">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputProductAmount" class="col-lg-4 control-label">Amount</label>
+            <div class="col-lg-8">
+                <input type="number" class="form-control" id="inputProductAmount" placeholder="Product Inventory" name="inventory">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputProductDescription" class="col-lg-4 control-label">Description</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" id="inputProductDescription" placeholder="Product Description" name="description">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-8 col-xs-offset-8">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-lg-4">
+    <% if (success != '') { %>
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong><%= success %></strong>
+    </div>
+    <% } %>
+    <% if (error != '') { %>
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>
+            <%= error %>
+        </strong>
+    </div>
+    <% } %>
+</div>
