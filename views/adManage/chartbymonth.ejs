@@ -1,0 +1,86 @@
+<div class="col-sm-4 mx-auto">
+    <select class="form-control" id="sel">
+        <option value="1"><a>Thang 1</a></option>
+        <option value="2"><a>Thang 2</a></option>
+        <option value="3"><a>Thang 3</a></option>
+        <option value="4"><a>Thang 4</a></option>
+        <option value="5"><a>Thang 5</a></option>
+        <option value="6"><a>Thang 6</a></option>
+        <option value="7"><a>Thang 7</a></option>
+        <option value="8"><a>Thang 8</a></option>
+        <option value="9"><a>Thang 9</a></option>
+        <option value="10"><a>Thang 10</a></option>
+        <option value="11"><a>Thang 11</a></option>
+        <option value="12"><a>Thang 12</a></option>
+    </select>
+    
+</div>
+<div class="col-md-8 mx-auto">
+    <canvas id="chart" height="80px" width="100px"></canvas>
+</div>
+<script>
+    var ctx = $('#chart');
+    $('#sel').change((e) => {
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:5000/admin/getbymonth",
+            data:{id: $(e.target).val()},
+            dataType: "json",
+            success: function (response) {
+                console.log(response)
+                let data = [],
+                    label = [];
+                response.amount.forEach(e => {
+                    dte = new Date(e.date)
+                    data.push({
+                        x: dte,
+                        y: e.turnover
+                    })
+                });
+                ctx = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: 'Doanh số Tháng '+$(e.target).val(),
+                            data: data,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'probability'
+                                },
+
+                            }],
+                            xAxes: [{
+                                type: 'time',
+                                time: {
+                                    unit: 'month'
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

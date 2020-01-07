@@ -56,6 +56,7 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 //res local
+
 app.use((req,res,next)=>{
     if(req.isAuthenticated()){
         res.locals.user = req.user

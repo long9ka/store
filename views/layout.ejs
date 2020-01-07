@@ -11,8 +11,9 @@
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/03a3640dee.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
     <link rel="stylesheet" href="../stylesheets/sidebar.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
 
 </head>
 
@@ -20,20 +21,20 @@
     <!--Body-->
     <%if (typeof user != "undefined") {%>
     <% if(user.isVerified == true){%>
-        <%- include('./part/sidebar')%>
+    <%- include('./part/sidebar')%>
+    <div class="page-wrapper chiller-theme toggled">
+        <%- include('./part/sidebar') %>
         <div class="page-wrapper chiller-theme toggled">
-            <%- include('./part/sidebar') %>
-            <div class="page-wrapper chiller-theme toggled">
-                <main class="page-content">
-                        <%-body%>
-                </main>
-            </div>
+            <main class="page-content">
+                <%-body%>
+            </main>
         </div>
+    </div>
     <%}else{%>
-        <%- include('./part/navbar') %>
-        <div class="container page-header fadsfadfda">
-            <%- body %>
-        </div>
+    <%- include('./part/navbar') %>
+    <div class="container page-header fadsfadfda">
+        <%- body %>
+    </div>
     <%}%>
     <%}else{%>
     <%- include('./part/navbar') %>
