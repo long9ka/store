@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 const config = require('./config/config');
-
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
@@ -45,7 +45,7 @@ app.use(session({
     }
 }))
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // flash
 app.use(flash());
@@ -55,10 +55,17 @@ app.use(require('./middleware/flash'));
 require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
-
+//res local
+app.use((req,res,next)=>{
+    if(req.isAuthenticated()){
+        res.locals.user = req.user
+    }
+    next();
+})
 // routes
 app.use('/product', require('./routes/product'));
 app.use('/user', require('./routes/user'));
+app.use('/admin',require('./routes/admin'));
 app.use('/', require('./routes/index'));
 
 

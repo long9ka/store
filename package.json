@@ -9,16 +9,23 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "dotenv": "^8.2.0",
-    "ejs": "^2.7.2",
+    "ejs": "^2.7.4",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.17.0",
-    "express-validator": "^6.2.0",
-    "mongoose": "^5.7.11",
+    "express-validator": "^6.3.1",
+    "faker": "^4.1.0",
+    "http-errors": "^1.7.3",
+    "moment": "^2.24.0",
+    "mongoose": "^5.8.5",
     "nodemailer": "^6.3.1",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "sweetalert2": "^9.5.4"
   }
 }

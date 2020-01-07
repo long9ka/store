@@ -478,4 +478,6 @@
   .chiller-theme .sidebar-footer>a:last-child {
       border-right: none;
   }
-  
+  a{
+    z-index:10000
+  }

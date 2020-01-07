@@ -19,7 +19,7 @@ const verify = require('../middleware/verify');
 const router = express.Router();
 
 router.route('/')
-    .get(auth, verify, (req, res) => res.render('page', { user: req.user }))
+    .get(auth, verify, (req, res) => res.render('page', { user: req.user,check:true }))
     .post()
 
 router.route('/terms')

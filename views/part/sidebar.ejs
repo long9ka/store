@@ -16,7 +16,7 @@
             </div>
             <div class="user-info">
                 <span class="user-name">
-                    <strong><a href="user/profile"><%= user.profile.name %></a></strong>
+                    <strong><a href="/user/profile"><%= user.profile.name %></a></strong>
                 </span>
                 <strong><%= user.role %></strong>
                 <span class="user-status">
@@ -55,7 +55,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="fa fa-user"></i>
-                        <span>Nhân Sự</span>
+                        <span>Người dùng</span>
                         <span class="badge badge-pill badge-danger">3</span>
                     </a>
                     <div class="sidebar-submenu">
@@ -66,7 +66,10 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#">Nhân viên cửa hàng</a>
+                                <a href="/admin/staff">Nhân viên cửa hàng</a>
+                            </li>
+                            <li>
+                                <a href="/admin/guest">Người dùng hệ thống</a>
                             </li>
                         </ul>
                     </div>
