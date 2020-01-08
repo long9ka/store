@@ -21,12 +21,6 @@ const verify = require('../middleware/verify');
 
 const router = express.Router();
 
-router.route('/')
-    .get((req, res) => {
-        // res.render('product/productView', { products: productList });
-        res.send('product view')
-    })
-
 router.route('/add')
     .get(auth, verify, (req, res) => {
         res.render('product/addProduct');
