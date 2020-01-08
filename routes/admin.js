@@ -35,7 +35,7 @@ router.route('/guest')
         User.find({
             role: 'guest'
         }).then(resp => {
-            return res.render('adManage/manager', {
+            return res.render('adManage/tableview', {
                 users: resp,
                 moment: (time) => moment(time).format("DD-MM-YYYY")
             })

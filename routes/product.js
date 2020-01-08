@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
-
+const faker = require('faker')
 // config
 const config = require('../config/config');
 const transporter = require('../config/transporter');
@@ -62,7 +62,21 @@ router.route('/add')
             });
         }
     })
-
+router.route('/clone')
+    .post((req,res)=>{
+        newProduct={
+            code :faker.random.number(),
+            name: faker.commerce.product(),
+            price: faker.commerce.price()*1000,
+            description: faker.lorem.text()
+        }
+        Product.insertMany(newProduct).then(e=>res.send(e))
+    })
+router.route('/view')
+    .get((req,res)=>{
+        Product.find().then(r=>{
+            res.render('product/productView',{products: r})})
+    })
 router.route('/update')
     .get(auth, verify, (req, res) => {
         res.render('product/updateProduct');
